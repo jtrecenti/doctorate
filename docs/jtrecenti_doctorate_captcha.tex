@@ -1,0 +1,171 @@
+\documentclass[12pt,]{report}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\hypersetup{
+            pdftitle={Quebrando CAPTCHAs},
+            pdfauthor={Julio Trecenti},
+            colorlinks=true,
+            linkcolor=Maroon,
+            citecolor=Blue,
+            urlcolor=Blue,
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{natbib}
+\bibliographystyle{apalike}
+\usepackage{longtable,booktabs}
+% Fix footnotes in tables (requires footnote package)
+\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{long table}}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lipsum}
+\usepackage{fullwidth}
+\usepackage{indentfirst}
+\usepackage[left=2.5cm, right=2.5cm, top=4cm, bottom=3.8cm]{geometry}
+\renewcommand{\familydefault}{\sfdefault}
+\PassOptionsToPackage{dvipsnames}{xcolor}
+\RequirePackage{xcolor} % [dvipsnames]
+\definecolor{halfgray}{gray}{0.55} % chapter numbers will be semi transparent .5 .55 .6 .0
+\definecolor{webgreen}{rgb}{0,.5,0}
+\definecolor{webbrown}{rgb}{.6,0,0}
+%\definecolor{Maroon}{cmyk}{0, 0.87, 0.68, 0.32}
+%\definecolor{RoyalBlue}{cmyk}{1, 0.50, 0, 0}
+%\definecolor{Black}{cmyk}{0, 0, 0, 0}
+\usepackage{fancyhdr}
+\usepackage{pdfpages}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage{spverbatim}
+\usepackage{lipsum}
+\usepackage{natbib}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{background}
+
+% \newcommand{\prestadorEmpresaFoot}{Associação Brasileira de Jurimetria}
+% \newcommand{\prestadorEmpresa}{Associação Brasileira de Jurimetria}
+% \newcommand{\prestadorRepr}{Marcelo Guedes Nunes}
+% \newcommand{\prestadorEnderecoFoot}{Rua Gomes de Carvalho, 1356, 1º andar. CEP 04547-005 - São Paulo, SP, Brasil.}
+% \newcommand{\prestadorEndereco}{Rua Gomes de Carvalho, 1356, 1º andar}
+% \newcommand{\prestadorEnderecoComp}{CEP 04547-005 - São Paulo, SP, Brasil}
+% \newcommand{\prestadorSite}{\url{http://abj.org.br}}
+% \newcommand{\prestadorEmail}{contato@abj.org.br}
+% \newcommand{\logo}{\includegraphics[width=0.21\textwidth, trim=0cm 0cm 0cm 11.1cm, clip]{imgs/logo_abj.png}}
+
+
+\setlength{\parindent}{2em}
+
+% \backgroundsetup{
+% scale=1,
+% angle=0,
+% opacity=1,
+% color=black,
+% contents={\begin{tikzpicture}[remember picture,overlay]
+% \node at ([xshift=-4.35cm,yshift=-2.5cm] current page.north east) % Adjust the position of the logo.
+% {\logo}; % logo goes here
+% \end{tikzpicture}}
+% }
+
+\usepackage{float}
+\let\origfigure\figure
+\let\endorigfigure\endfigure
+\renewenvironment{figure}[1][2] {
+    \expandafter\origfigure\expandafter[H]
+} {
+    \endorigfigure
+}
+
+\title{Quebrando CAPTCHAs}
+\author{Julio Trecenti}
+\date{21 de abril de 2018}
+
+\begin{document}
+\maketitle
+
+{
+\hypersetup{linkcolor=black}
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\listoftables
+\listoffigures
+\chapter{Introduction}\label{introduction}
+
+\chapter{Introdução}\label{introducao}
+
+\section{Objetivos}\label{objetivos}
+
+\section{Resultados Esperados}\label{resultados-esperados}
+
+\section{Organização do trabalho}\label{organizacao-do-trabalho}
+
+\chapter{Problema}\label{problema}
+
+\section{Bases de dados}\label{bases-de-dados}
+
+\section{Modelos}\label{modelos}
+
+\chapter{Solução}\label{solucao}
+
+\chapter{Resultados}\label{resultados}
+
+\chapter{Considerações finais}\label{consideracoes-finais}
+
+\chapter{Pacote decryptr}\label{pacote-decryptr}
+
+\chapter{CAPTCHAs em áudio}\label{captchas-em-audio}
+
+\bibliography{bibliography/book.bib,bibliography/packages.bib}
+
+\end{document}
