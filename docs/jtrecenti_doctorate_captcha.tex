@@ -128,7 +128,7 @@
 
 \title{Quebrando CAPTCHAs}
 \author{Julio Trecenti}
-\date{21 de abril de 2018}
+\date{03 de maio de 2018}
 
 \begin{document}
 \maketitle
@@ -152,9 +152,71 @@
 
 \chapter{Problema}\label{problema}
 
-\section{Bases de dados}\label{bases-de-dados}
+O problema do Captcha pode ser entendido como um problema de
+classificação de imagens. Especificamente, nosso interesse é criar uma
+função \(g\) que recebe uma imagem
+\(\mathbf X = \{x_{nmr} \in [0,1]\}_{N\times M \times R}\) e retorna um
+vetor de índices \(\mathbf y\), sendo que cada índice \(y_j\) possui uma
+correspondência biunívoca para um caractere \(c_j\),
+\(j = 1, \dots, L\), onde \(L\) é o número de caracteres contidos na
+imagem.
 
-\section{Modelos}\label{modelos}
+Das afirmações anteriores podemos tirar três conclusões.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Nossa variável \textbf{explicativa}, a imagem, é uma matriz
+  \(\mathbf X = \{x_{ijk}\}_{N\times M \times R}\), em que \(N\) é o
+  número de linhas, \(M\) é o número de colunas e \(R\) é o número de
+  \emph{cores}, ou \emph{canais}.
+\end{enumerate}
+
+O elemento \(x_{nm\cdot}\) é denominado \emph{pixel}. Um pixel
+representa a menor unidade possível da imagem. Em uma imagem colorida,
+por exemplo, temos \(R=3\). Nesse caso, um pixel é um vetor de três
+dimensões com valores entre zero e um, representando a intensidade de
+vermelho, verde e azul da coordenada \(n,m\) da imagem. Numa imagem em
+escala de cinza, temos \(R=1\) e o pixel, de uma dimensão, representa a
+intensidade do cinza (com 1=branco e 0=preto).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  Nossa \textbf{resposta}
+  \(\mathbf y \in \mathbb \{1, \dots, |\mathcal A|\}^L\) é um vetor de
+  índices de tamanho fixo, que indica qual caract
+\item
+  O objeto \(C \in \mathcal A^L\) é um vetor de itens de um alfabeto
+  \(\mathcal A\) com tamanho \(|\mathcal A|\), finito e conhecido. Além
+  disso, existe uma função
+  \(\phi: \{1, \dots, |\mathcal A|\} \to \mathcal A\) de tal forma que
+  \(\phi(y_j) = c_j, \forall j \in 1, \dots, L\). Usualmente, definimos
+  \(\phi(y_j) = c_{y_j}\).
+\end{enumerate}
+
+A construção de uma função \(g\) capaz de mapear \(\mathbf y\) a partir
+de uma nova imagem \(\mathbf X\) depende de uma amostra de imagens
+\(\mathbf X_1, \dots, \mathbf X_S\) corretamente classificadas por
+\(\mathbf y_1, \dots, \mathbf y_S\). A tarefa é, portanto, estimar uma
+função \(\hat g\) com o objetivo de minimizar.
+
+\[
+L(g(\mathbf X), \mathbf y) = \mathbb I(g(\mathbf X) \neq \mathbf y)
+\]
+
+em que \(\mathbb I\) é a função indicadora.
+
+\section{Variantes}\label{variantes}
+
+\subsection{Áudio}\label{audio}
+
+\subsection{Covariáveis e número de respostas
+variável}\label{covariaveis-e-numero-de-respostas-variavel}
+
+\subsection{reCaptcha}\label{recaptcha}
 
 \chapter{Solução}\label{solucao}
 
