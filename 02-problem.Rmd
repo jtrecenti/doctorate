@@ -14,8 +14,6 @@ O elemento $x_{nm\cdot}$ é denominado *pixel*. Um pixel representa a menor unid
 
 3. Nossa **resposta** $\mathbf y \in \mathbb \{1, \dots, |\mathcal A|\}^L$ é um vetor de índices de tamanho fixo. Cada elemento de $\mathbf y$ representa um valor do alfabeto $\mathcal A$.
 
-Além disso, existe uma função $\phi: \{1, \dots, |\mathcal A|\} \to \mathcal A$ de tal forma que $\phi(y_j) = c_j, \forall j \in 1, \dots, L$. Usualmente, definimos $\phi(y_j) = c_{y_j}$.
-
 A construção de uma função $g$ capaz de mapear $\mathbf y$ a partir de uma nova imagem $\mathbf X$ depende de uma amostra de imagens $\mathbf X_1, \dots, \mathbf X_S$ corretamente classificadas por $\mathbf y_1, \dots, \mathbf y_S$. A tarefa é, portanto, estimar uma função $\hat g$ com o objetivo de minimizar.
 
 $$
