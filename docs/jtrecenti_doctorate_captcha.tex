@@ -156,10 +156,9 @@ O problema do Captcha pode ser entendido como um problema de
 classificação de imagens. Especificamente, nosso interesse é criar uma
 função \(g\) que recebe uma imagem
 \(\mathbf X = \{x_{nmr} \in [0,1]\}_{N\times M \times R}\) e retorna um
-vetor de índices \(\mathbf y\), sendo que cada índice \(y_j\) possui uma
-correspondência biunívoca para um caractere \(c_j\),
-\(j = 1, \dots, L\), onde \(L\) é o número de caracteres contidos na
-imagem.
+vetor de índices \(\mathbf y\), sendo que cada índice \(y_j\)
+corresponde a um caractere \(c_j\), \(j = 1, \dots, L\), onde \(L\) é o
+número de caracteres contidos na imagem.
 
 Das afirmações anteriores podemos tirar três conclusões.
 
@@ -185,17 +184,21 @@ intensidade do cinza (com 1=branco e 0=preto).
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{1}
 \item
+  O objeto \(C \in \mathcal A^L\) é um vetor de itens de um alfabeto
+  \(\mathcal A\) com tamanho \(|\mathcal A|\), finito e conhecido. Esse
+  alfabeto contém todos os possíveis caracteres que podem aparecer na
+  imagem.
+\item
   Nossa \textbf{resposta}
   \(\mathbf y \in \mathbb \{1, \dots, |\mathcal A|\}^L\) é um vetor de
-  índices de tamanho fixo, que indica qual caract
-\item
-  O objeto \(C \in \mathcal A^L\) é um vetor de itens de um alfabeto
-  \(\mathcal A\) com tamanho \(|\mathcal A|\), finito e conhecido. Além
-  disso, existe uma função
-  \(\phi: \{1, \dots, |\mathcal A|\} \to \mathcal A\) de tal forma que
-  \(\phi(y_j) = c_j, \forall j \in 1, \dots, L\). Usualmente, definimos
-  \(\phi(y_j) = c_{y_j}\).
+  índices de tamanho fixo. Cada elemento de \(\mathbf y\) representa um
+  valor do alfabeto \(\mathcal A\).
 \end{enumerate}
+
+Além disso, existe uma função
+\(\phi: \{1, \dots, |\mathcal A|\} \to \mathcal A\) de tal forma que
+\(\phi(y_j) = c_j, \forall j \in 1, \dots, L\). Usualmente, definimos
+\(\phi(y_j) = c_{y_j}\).
 
 A construção de uma função \(g\) capaz de mapear \(\mathbf y\) a partir
 de uma nova imagem \(\mathbf X\) depende de uma amostra de imagens
