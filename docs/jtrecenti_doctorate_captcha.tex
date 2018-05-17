@@ -128,7 +128,7 @@
 
 \title{Quebrando CAPTCHAs}
 \author{Julio Trecenti}
-\date{03 de maio de 2018}
+\date{17 de maio de 2018}
 
 \begin{document}
 \maketitle
@@ -210,6 +210,22 @@ em que \(\mathbb I\) é a função indicadora.
 \section{Variantes}\label{variantes}
 
 \subsection{Áudio}\label{audio}
+
+Captchas também podem se manifestar na forma de áudio. Nesses casos, o
+usuário é condicionado a ouvir um áudio e transcrever seu conteúdo em um
+texto.
+
+Com base nos Captchas analisados durante o desenvolvimento do trabalho,
+verificamos que Captchas de áudio são menos complexos. Por exemplo,
+alguns destes são formados por sons sem ruído. Ou seja, uma tabela de
+sons e classificações seria suficiente para quebrar os Captchas.
+
+Nos casos com ruído, podemos utilizar duas técnicas para quebrar
+Captchas de áudio. A primeira é baseada em engenharia de características
+{[}ref{]}, que extrai covariáveis dos áudios, para serem utilizados
+posteriormente em um modelo de regressão clássico. O segundo método
+consiste em calcular o espectrograma do áudio e tratá-lo como um Captcha
+de imagem.
 
 \subsection{Covariáveis e número de respostas
 variável}\label{covariaveis-e-numero-de-respostas-variavel}

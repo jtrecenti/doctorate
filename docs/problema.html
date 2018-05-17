@@ -126,6 +126,9 @@ L(g(\mathbf X), \mathbf y) = \mathbb I(g(\mathbf X) \neq \mathbf y)
 <h2><span class="header-section-number">3.1</span> Variantes</h2>
 <div id="audio" class="section level3">
 <h3><span class="header-section-number">3.1.1</span> Áudio</h3>
+<p>Captchas também podem se manifestar na forma de áudio. Nesses casos, o usuário é condicionado a ouvir um áudio e transcrever seu conteúdo em um texto.</p>
+<p>Com base nos Captchas analisados durante o desenvolvimento do trabalho, verificamos que Captchas de áudio são menos complexos. Por exemplo, alguns destes são formados por sons sem ruído. Ou seja, uma tabela de sons e classificações seria suficiente para quebrar os Captchas.</p>
+<p>Nos casos com ruído, podemos utilizar duas técnicas para quebrar Captchas de áudio. A primeira é baseada em engenharia de características [ref], que extrai covariáveis dos áudios, para serem utilizados posteriormente em um modelo de regressão clássico. O segundo método consiste em calcular o espectrograma do áudio e tratá-lo como um Captcha de imagem.</p>
 </div>
 <div id="covariaveis-e-numero-de-respostas-variavel" class="section level3">
 <h3><span class="header-section-number">3.1.2</span> Covariáveis e número de respostas variável</h3>
