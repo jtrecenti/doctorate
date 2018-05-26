@@ -34,8 +34,22 @@ Nos casos com ruído, podemos utilizar duas técnicas para quebrar Captchas de �
 
 ### Covariáveis e número de respostas variável
 
+Outra forma comum de manifestação de Captchas são imagens em que o número de letras varia. Esse problema é mais complexo que o anterior pois a variável resposta não é mais um vetor de tamanho $L$ fixo.
 
+Assumindo que o número de letras máximo que aparece numa imagem é fixo, uma solução para o problema de tamanho variável é considerar um caractere adicional `_` no alfabeto, chamado *placeholder*, que representa a ausência do caractere em determinada posição. Assim, uma imagem com $L_{\max} = 5$, por exemplo, poderia ter uma classificação `cad5_`, que tem apenas quatro letras.
+
+O problema dessa proposta é que a posição dos *placeholders* não importa na classificação do captcha. Ou seja, as soluções `cad5_`, `ca_d5` e `_cad5` são  equivalentes. Isso torna o problema mais difícil de controlar.
+
+Outra alternativa para o problema é considerar que um de nossos interesses de predição é justamente o número de letras. Assim, teríamos 
+
+$$
+\tilde{\mathbf{y}} = \left[l \;\; \mathbf y^\top \right]^\top,
+$$
+
+onde $l$ é o número de letras do Captcha específico e $\mathbf y$ tem comprimento $L_{\max}$, preenchido com *placeholders* como anteriormente. A presença do número de letras como componente da variável resposta do problema permite trabalhar adequadamente com os *placeholders*, pois podemos descartá-los na função de perda (verossimilhança) nos casos em que o número de letras estimadas for menor que $L_{\max}$.
+
+Usualmente, o problema de Captchas de tamanho variável é acompanhado pelo problema das covariáveis. Um tipo comum de Captcha com covariáveis são questões como "digite todas as letras da cor verde". Nesse caso, "verde" é uma covariável, pois é uma das informações que deve ser utilizada em conjunto com a imagem completa para predizr o texto do Captcha.
+
+Inicialmente, pode parecer contra intuitivo considerar uma imagem e um texto como covariáveis para predizer o valor de $\mathbf y$, mas isso se dá de forma natural, principalmente na solução que proposta no Capítulo \@ref{results}.
 
 ### reCaptcha
-
-
