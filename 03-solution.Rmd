@@ -1,1 +1,156 @@
 # Solução
+
+##
+
+[@von2002telling] define captchas pela primeira vez
+
+[@von2003captcha] define um problema de resolver captcha como um problema de inteligência artificial.
+
+[@mori2003recognizing] apresenta uma solução rudimentar para o problema a partir de cortes em imagens. O modelo final acerta somente 33% dos casos.
+
+[@yan2008low] criam um modelo de quebrar captcha baseado em diversas heurísticas.
+
+[@yan2008usability] usability issues in CAPTCHA design
+
+[@golle2008machine] utilizam SVM
+
+[@motoyama2010re] estudam o aspecto economico dos recaptchas
+
+[@bursztein2011text] testam varios modelos em 15 captchas diferentes
+
+[@bursztein2014end] mostram um modelo de reinforcement
+
+--------------------------------------------------------------------------------
+
+Um problema de resolver o CAPTCHA diretamente é que a variável resposta $\mathbf y$ tem um número exponencial de combinações. Na formulação do capítulo anterior, nossa resposta é uma palavra de $L$ caracteres, sendo que cada caractere $c_j$ pode ter $|\mathcal A|$ valores. Nessa construção, o total de combinações é $|\mathcal A|^L$.
+
+Por exemplo, um CAPTCHA com $L=6$ letras e $|\mathcal A| = 36$ possibilidades em cada letra (26 letras do alfabeto e 10 algarismos), possui um total de 2.176.782.336 (> 2 bilhões) combinações. Modelar essas imagens diretamente através de uma única variável resposta categórica é inviável.
+
+Por isso, uma forma de resolver CAPTCHAs é separando o problema em duas tarefas: segmentar e classificar. A tarefa de segmentação consiste em receber uma imagem com várias letras e detectar pontos de corte, separando-a em várias imagens de uma letra. Já a classificação consiste em receber uma imagem com uma letra e identificar o caractere correspondente. Nesse caso, a resposta é reduzida para $|\mathcal A|$ categorias, que cresce linearmente e, portanto, tratável.
+
+[img-fluxo]
+
+A literatura mostra através de estudos empíricos que a tarefa de segmentar é mais difícil do que a tarefa de classificar [@bursztein2014end]. Isso acontece porque o problema de classificação de letras segmentadas é similar ao problema de reconhecimento de caracteres (*Optical Character Recognition*, OCR), que é amplamente estudado e pode ser considerado resolvido. A segmentação, no entanto, é um problema em aberto e faz parte da literatura de oclusão de objetos em visão computacional. 
+
+Por esse motivo, os desenvolvedores de CAPTCHAs de imagens baseadas em texto têm explorado métodos de dificultar a segmentação. As principais formas são i) colar os caracteres e ii) adicionar linhas ligando os dígitos. Essas técnicas são combinadas com a adição de ruído e distorção de caracteres para compor a imagem final.
+
+Vamos usar como exemplo o CAPTCHA do Tribunal de Justiça de Minas Gerais (TJMG). Nesse caso, temos $L=4$ e $|\mathcal A|=10$, apenas os dez algarismos.
+
+```{r dlimg1, eval=FALSE, echo=FALSE}
+arq_captcha <- decryptr::download_captcha("tjmg", n = 1, path = 'imgs/captcha')
+```
+
+A Figura \@ref(fig:tjmg1) mostra um exemplo do captcha do TJMG. Podemos notar a utilização de distorção de catacteres e adição de linhas ligando os dígitos como formas de evitar a resolução automática.
+
+```{r tjmg1, fig.height=1.5, fig.width=4, fig.cap='CAPTCHA do TJMG.', echo=FALSE}
+library(decryptr)
+arq_captcha <- "imgs/captcha/captcha28485fae0376.jpeg"
+arq_captcha  %>% 
+  read_captcha() %>% 
+  dplyr::first() %>% 
+  plot()
+```
+
+Nesse caso, é podemos resolver o problema da segmentação realizando cortes fixos na imagem. Podemos também limitar os eixos `x`, tirando os espaços vazios à esquerda e à direita e `y`, removendo espaços superiores e inferiores. Por último, transformamos a imagem em escala de cinza. O resultado dessas operações de pré-processamento estão na Figura \@ref(fig:tjmg2).
+
+```{r tjmg2, fig.height=1.5, fig.width=4, fig.cap='CAPTCHA do TJMG após segmentação.', echo=TRUE}
+op <- graphics::par(mar = rep(0, 4))
+arq_captcha %>% 
+  read_captcha() %>% 
+  dplyr::first() %>% 
+  with(x) %>% 
+  magrittr::extract(-c(1:7, 34:dim(.)[1]), -c(1:06, 107:dim(.)[2]), TRUE) %>%
+  grDevices::as.raster() %>% 
+  graphics::plot()
+abline(v = 20 * 1:4, col = 'red')
+abline(h = c(0, 26), col = 'blue')
+```
+
+O resultado são cinco imagens de dimensões `26x20`, associadas a cada caractere. O próximo passo é transformar o banco de dados num formato tratável por modelos tradicionais de regressão. Para isso, colocamos cada pixel em uma coluna da nossa base de dados. No caso do TJMG, cada CAPTCHA gera uma tabela de 5 linhas e 520 (`26 * 20`) colunas. A Tabela \@ref(tab:imgsep) mostra as primeiras seis colunas dessa base. 
+
+```{r imgsep, echo=TRUE}
+arq_captcha %>% 
+  read_captcha() %>% 
+  dplyr::first() %>% 
+  with(x) %>% 
+  magrittr::extract(-c(1:7, 34:dim(.)[1]), -c(1:06, 107:dim(.)[2]), TRUE) %>%
+  tibble::as_tibble() %>% 
+  tibble::rownames_to_column('y') %>% 
+  tidyr::gather(x, value, -y) %>% 
+  dplyr::mutate_at(dplyr::vars(x, y), dplyr::funs(readr::parse_number)) %>% 
+  dplyr::mutate(letra = (x - 1) %/% 20 + 1, x = x - (letra - 1) * 20) %>% 
+  dplyr::mutate_at(dplyr::vars(x, y), dplyr::funs(sprintf('%02d', .))) %>% 
+  tidyr::unite(xy, x, y) %>% 
+  tidyr::spread(xy, value, sep = '') %>% 
+  dplyr::mutate(y = c('7', '3', '2', '4', '6')) %>% 
+  dplyr::select(y, dplyr::everything(), -letra) %>% 
+  dplyr::select(1:7) %>%
+  dplyr::mutate_at(dplyr::vars(-y), dplyr::funs(round(., 3))) %>% 
+  knitr::kable(caption = "Base de dados montada a partir de imagem segmentada.")
+```
+
+Agora basta rodar o mesmo para toda a base de treino e rodar um modelo. Nesse exemplo, utilizamos uma base de 1500 CAPTCHAs classificados. O resultado após o pré-processamento é uma base com 7500 linhas e 520 colunas. Escolhemos manter 6000 linhas para treino e as 1500 restantes para teste. Utilizamos um modelo de florestas aleatórias para o exemplo [@breiman2001random].
+
+```{r carregabd, message=FALSE, warning=FALSE, eval=FALSE, echo=FALSE}
+dados <- readRDS('data/dados_segment.rds') %>% dplyr::mutate(y = factor(y))
+# monta bases de treino e teste
+set.seed(4747) # reprodutibilidade
+ids_treino <- sample(seq_len(nrow(dados)), 6000, replace = FALSE)
+d_train <- dados[ids_treino, ]
+d_test <- dados[-ids_treino, ]
+model_rf <- randomForest::randomForest(y ~ . - captcha_id, data = d_train) 
+```
+
+O resultado do modelo pode ser verificado na Tabela \@ref(tab:errosTJMG), que mostra os observados *versus* preditos na base de teste. O acerto foi de 99.6% em cada caractere. Assumindo que o erro não depende da posição do caractere no CAPTCHA, o acerto para a imagem completa é de aproximadamente 98%.
+
+```{r errosTJMG, eval=FALSE, echo=TRUE}
+d_test %>% 
+  dplyr::mutate(pred = predict(model_rf, newdata = .)) %>% 
+  dplyr::count(y, pred) %>% 
+  tidyr::spread(pred, n, fill = '.') %>% 
+  tibble::remove_rownames() %>% 
+  knitr::kable(caption = 'Tabela de acertos e erros.')
+```
+
+O resultado para o TJMG é bastante satisfatório, mas não generaliza para outros CAPTCHAs. Tome por exemplo o CAPTCHA da Receita Federal (RFB) da Figura \@ref(fig:generalize). Nesse caso, a posição dos caracteres muda significativamente de imagem para imagem, e assim fica difícil cortar em pedaços.
+
+```{r generalize, echo=FALSE, out.width = '12%', fig.cap="CAPTCHA Receita Federal"}
+fs::dir_ls('imgs/captcha/rfb') %>% 
+  decryptr::read_captcha() %>% 
+  purrr::walk(plot)
+```
+
+A mesma técnica aplicada ao CAPTCHA RFB apresentou acerto de 78.8% do caractere, o que equivale a apenas 23.8% de acerto para toda a imagem. Claro que seria possível melhorar o poder preditivo com ajustes nos hipeparâmetros do modelo, mas o problema essencial nesse caso está na qualidade segmentação, e não na classificação dos caracteres.
+
+Por isso, faz-se necessária uma abordagem que trata o problema completo, sem passar explicitamente pela fase de segmentação. Ao invés de cortar a imagem, vamos extrair detalhes da imagem completa automaticamente e utilizar essas características como variáveis preditoras num modelo de regressão. Chamaremos essa abordagem de *deep learning*.
+
+
+
+
+
+
+
+## Formas de reduzir o tamanho da amostra
+
+- Ensemble
+- Data augmentation / geradores
+- Tesseract
+- Feedback
+  - manual
+  - oráculo
+
+
+```{r}
+library(magrittr)
+ti <- iris
+ti$perfil <- iris$Species
+table(ti$perfil) %>% 
+  ">"(., 1) %>% 
+  names(.)[.]
+ti %>% 
+  with(perfil) %>% 
+  table() %>% 
+  is_greater_than(1) %>% 
+  names()
+```
+
