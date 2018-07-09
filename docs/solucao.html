@@ -270,13 +270,157 @@ Figura 4.2: CAPTCHA do TJMG após segmentação.
 </tbody>
 </table>
 <p>Agora basta rodar o mesmo para toda a base de treino e rodar um modelo. Nesse exemplo, utilizamos uma base de 1500 CAPTCHAs classificados. O resultado após o pré-processamento é uma base com 7500 linhas e 520 colunas. Escolhemos manter 6000 linhas para treino e as 1500 restantes para teste. Utilizamos um modelo de florestas aleatórias para o exemplo <span class="citation">(Breiman <a href="#ref-breiman2001random">2001</a>)</span>.</p>
-<p>O resultado do modelo pode ser verificado na Tabela <a href="#tab:errosTJMG"><strong>??</strong></a>, que mostra os observados <em>versus</em> preditos na base de teste. O acerto foi de 99.6% em cada caractere. Assumindo que o erro não depende da posição do caractere no CAPTCHA, o acerto para a imagem completa é de aproximadamente 98%.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d_test <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">pred =</span> <span class="kw">predict</span>(model_rf, <span class="dt">newdata =</span> .)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">count</span>(y, pred) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tidyr<span class="op">::</span><span class="kw">spread</span>(pred, n, <span class="dt">fill =</span> <span class="st">&#39;.&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>tibble<span class="op">::</span><span class="kw">remove_rownames</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&#39;Tabela de acertos e erros.&#39;</span>)</code></pre></div>
+<p>O resultado do modelo pode ser verificado na Tabela <a href="solucao.html#tab:errosTJMG">4.2</a>, que mostra os observados <em>versus</em> preditos na base de teste. O acerto foi de 99.6% em cada caractere. Assumindo que o erro não depende da posição do caractere no CAPTCHA, o acerto para a imagem completa é de aproximadamente 98%.</p>
+<table>
+<caption><span id="tab:errosTJMG">Tabela 4.2: </span>Tabela de acertos e erros.</caption>
+<thead>
+<tr class="header">
+<th align="left">y</th>
+<th align="left">0</th>
+<th align="left">1</th>
+<th align="left">2</th>
+<th align="left">3</th>
+<th align="left">4</th>
+<th align="left">5</th>
+<th align="left">6</th>
+<th align="left">7</th>
+<th align="left">8</th>
+<th align="left">9</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">0</td>
+<td align="left">156</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+</tr>
+<tr class="even">
+<td align="left">1</td>
+<td align="left">.</td>
+<td align="left">160</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+</tr>
+<tr class="odd">
+<td align="left">2</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">147</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">1</td>
+<td align="left">140</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+</tr>
+<tr class="odd">
+<td align="left">4</td>
+<td align="left">.</td>
+<td align="left">2</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">150</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+</tr>
+<tr class="even">
+<td align="left">5</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">153</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+</tr>
+<tr class="odd">
+<td align="left">6</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">143</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+</tr>
+<tr class="even">
+<td align="left">7</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">152</td>
+<td align="left">.</td>
+<td align="left">.</td>
+</tr>
+<tr class="odd">
+<td align="left">8</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">2</td>
+<td align="left">1</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">139</td>
+<td align="left">.</td>
+</tr>
+<tr class="even">
+<td align="left">9</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">.</td>
+<td align="left">1</td>
+<td align="left">153</td>
+</tr>
+</tbody>
+</table>
 <p>O resultado para o TJMG é bastante satisfatório, mas não generaliza para outros CAPTCHAs. Tome por exemplo o CAPTCHA da Receita Federal (RFB) da Figura <a href="solucao.html#fig:generalize">4.3</a>. Nesse caso, a posição dos caracteres muda significativamente de imagem para imagem, e assim fica difícil cortar em pedaços.</p>
 <div class="figure"><span id="fig:generalize"></span>
 <img src="jtrecenti_doctorate_captcha_files/figure-html/generalize-1.svg" alt="CAPTCHA Receita Federal" width="12%" />

@@ -91,7 +91,7 @@ arq_captcha %>%
 
 Agora basta rodar o mesmo para toda a base de treino e rodar um modelo. Nesse exemplo, utilizamos uma base de 1500 CAPTCHAs classificados. O resultado após o pré-processamento é uma base com 7500 linhas e 520 colunas. Escolhemos manter 6000 linhas para treino e as 1500 restantes para teste. Utilizamos um modelo de florestas aleatórias para o exemplo [@breiman2001random].
 
-```{r carregabd, message=FALSE, warning=FALSE, eval=FALSE, echo=FALSE}
+```{r carregabd, message=FALSE, warning=FALSE, eval=TRUE, echo=FALSE}
 dados <- readRDS('data/dados_segment.rds') %>% dplyr::mutate(y = factor(y))
 # monta bases de treino e teste
 set.seed(4747) # reprodutibilidade
@@ -103,7 +103,7 @@ model_rf <- randomForest::randomForest(y ~ . - captcha_id, data = d_train)
 
 O resultado do modelo pode ser verificado na Tabela \@ref(tab:errosTJMG), que mostra os observados *versus* preditos na base de teste. O acerto foi de 99.6% em cada caractere. Assumindo que o erro não depende da posição do caractere no CAPTCHA, o acerto para a imagem completa é de aproximadamente 98%.
 
-```{r errosTJMG, eval=FALSE, echo=TRUE}
+```{r errosTJMG, eval=TRUE, echo=FALSE}
 d_test %>% 
   dplyr::mutate(pred = predict(model_rf, newdata = .)) %>% 
   dplyr::count(y, pred) %>% 
@@ -114,7 +114,7 @@ d_test %>%
 
 O resultado para o TJMG é bastante satisfatório, mas não generaliza para outros CAPTCHAs. Tome por exemplo o CAPTCHA da Receita Federal (RFB) da Figura \@ref(fig:generalize). Nesse caso, a posição dos caracteres muda significativamente de imagem para imagem, e assim fica difícil cortar em pedaços.
 
-```{r generalize, echo=FALSE, out.width = '12%', fig.cap="CAPTCHA Receita Federal"}
+```{r generalize, echo=FALSE, out.width = '12%', fig.cap="CAPTCHA Receita Federal", fig.align="center"}
 fs::dir_ls('imgs/captcha/rfb') %>% 
   decryptr::read_captcha() %>% 
   purrr::walk(plot)
