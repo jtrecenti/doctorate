@@ -1,6 +1,6 @@
 # Problema
 
-O problema do Captcha pode ser entendido como um problema de classificação de imagens. Especificamente, nosso interesse é criar uma função $g$ que recebe uma imagem $\mathbf X = \{x_{nmr} \in [0,1]\}_{N\times M \times R}$ e retorna um vetor de índices $\mathbf y$, sendo que cada índice $y_j$ corresponde a um caractere $c_j$, $j = 1, \dots, L$, onde $L$ é o número de caracteres contidos na imagem.
+O problema do Captcha pode ser entendido como um problema de classificação de imagens. Especificamente, nosso interesse é criar uma função $g$ que recebe uma imagem $\mathbf X = \{x_{nmr} \in [0,1]\}_{N\times M \times R}$ e retorna um vetor de índices $\mathbf y$, sendo que cada índice $y_j$ corresponde a um caractere $c_j$, $j = 1, \dots, L$, onde $L$ é o número de caracteres contidos na imagem. Chamaremos $L$ de *comprimento* do Captcha.
 
 Das afirmações anteriores podemos tirar três conclusões.
 

@@ -116,8 +116,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="solucao.html"><a href="solucao.html"><i class="fa fa-check"></i><b>4</b> Solução</a><ul>
-<li class="chapter" data-level="4.1" data-path="solucao.html"><a href="solucao.html#section"><i class="fa fa-check"></i><b>4.1</b> </a></li>
-<li class="chapter" data-level="4.2" data-path="solucao.html"><a href="solucao.html#formas-de-reduzir-o-tamanho-da-amostra"><i class="fa fa-check"></i><b>4.2</b> Formas de reduzir o tamanho da amostra</a></li>
+<li class="chapter" data-level="4.1" data-path="solucao.html"><a href="solucao.html#segmentacao-e-classificacao"><i class="fa fa-check"></i><b>4.1</b> Segmentação e classificação</a></li>
+<li class="chapter" data-level="4.2" data-path="solucao.html"><a href="solucao.html#forca-bruta"><i class="fa fa-check"></i><b>4.2</b> Força-bruta</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="solucao.html"><a href="solucao.html#redes-neurais"><i class="fa fa-check"></i><b>4.2.1</b> Redes neurais</a></li>
+<li class="chapter" data-level="4.2.2" data-path="solucao.html"><a href="solucao.html#a-operacao-de-convolucao"><i class="fa fa-check"></i><b>4.2.2</b> A operação de convolução</a></li>
+<li class="chapter" data-level="4.2.3" data-path="solucao.html"><a href="solucao.html#aplicando-nos-captchas"><i class="fa fa-check"></i><b>4.2.3</b> Aplicando nos captchas</a></li>
+<li class="chapter" data-level="4.2.4" data-path="solucao.html"><a href="solucao.html#redes-neurais-convolucionais"><i class="fa fa-check"></i><b>4.2.4</b> Redes neurais convolucionais</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="solucao.html"><a href="solucao.html#eficiencia-e-generalizacao"><i class="fa fa-check"></i><b>4.3</b> Eficiência e generalização</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="solucao.html"><a href="solucao.html#feedback"><i class="fa fa-check"></i><b>4.3.1</b> Feedback</a></li>
+<li class="chapter" data-level="4.3.2" data-path="solucao.html"><a href="solucao.html#reciclagem"><i class="fa fa-check"></i><b>4.3.2</b> Reciclagem</a></li>
+<li class="chapter" data-level="4.3.3" data-path="solucao.html"><a href="solucao.html#ensemble"><i class="fa fa-check"></i><b>4.3.3</b> Ensemble</a></li>
+<li class="chapter" data-level="4.3.4" data-path="solucao.html"><a href="solucao.html#section"><i class="fa fa-check"></i><b>4.3.4</b> </a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="resultados.html"><a href="resultados.html"><i class="fa fa-check"></i><b>5</b> Resultados</a></li>
 <li class="chapter" data-level="6" data-path="consideracoes-finais.html"><a href="consideracoes-finais.html"><i class="fa fa-check"></i><b>6</b> Considerações finais</a></li>
@@ -146,7 +157,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="problema" class="section level1">
 <h1><span class="header-section-number">Capítulo 3</span> Problema</h1>
-<p>O problema do Captcha pode ser entendido como um problema de classificação de imagens. Especificamente, nosso interesse é criar uma função <span class="math inline">\(g\)</span> que recebe uma imagem <span class="math inline">\(\mathbf X = \{x_{nmr} \in [0,1]\}_{N\times M \times R}\)</span> e retorna um vetor de índices <span class="math inline">\(\mathbf y\)</span>, sendo que cada índice <span class="math inline">\(y_j\)</span> corresponde a um caractere <span class="math inline">\(c_j\)</span>, <span class="math inline">\(j = 1, \dots, L\)</span>, onde <span class="math inline">\(L\)</span> é o número de caracteres contidos na imagem.</p>
+<p>O problema do Captcha pode ser entendido como um problema de classificação de imagens. Especificamente, nosso interesse é criar uma função <span class="math inline">\(g\)</span> que recebe uma imagem <span class="math inline">\(\mathbf X = \{x_{nmr} \in [0,1]\}_{N\times M \times R}\)</span> e retorna um vetor de índices <span class="math inline">\(\mathbf y\)</span>, sendo que cada índice <span class="math inline">\(y_j\)</span> corresponde a um caractere <span class="math inline">\(c_j\)</span>, <span class="math inline">\(j = 1, \dots, L\)</span>, onde <span class="math inline">\(L\)</span> é o número de caracteres contidos na imagem. Chamaremos <span class="math inline">\(L\)</span> de <em>comprimento</em> do Captcha.</p>
 <p>Das afirmações anteriores podemos tirar três conclusões.</p>
 <ol style="list-style-type: decimal">
 <li>Nossa variável <strong>explicativa</strong>, a imagem, é uma matriz <span class="math inline">\(\mathbf X = \{x_{ijk}\}_{N\times M \times R}\)</span>, em que <span class="math inline">\(N\)</span> é o número de linhas, <span class="math inline">\(M\)</span> é o número de colunas e <span class="math inline">\(R\)</span> é o número de <em>cores</em>, ou <em>canais</em>.</li>
