@@ -105,8 +105,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="introducao.html"><a href="introducao.html"><i class="fa fa-check"></i><b>2</b> Introdução</a><ul>
 <li class="chapter" data-level="2.1" data-path="introducao.html"><a href="introducao.html#objetivos"><i class="fa fa-check"></i><b>2.1</b> Objetivos</a></li>
-<li class="chapter" data-level="2.2" data-path="introducao.html"><a href="introducao.html#resultados-esperados"><i class="fa fa-check"></i><b>2.2</b> Resultados Esperados</a></li>
-<li class="chapter" data-level="2.3" data-path="introducao.html"><a href="introducao.html#organizacao-do-trabalho"><i class="fa fa-check"></i><b>2.3</b> Organização do trabalho</a></li>
+<li class="chapter" data-level="2.2" data-path="introducao.html"><a href="introducao.html#resultados-esperados"><i class="fa fa-check"></i><b>2.2</b> Resultados esperados</a></li>
+<li class="chapter" data-level="2.3" data-path="introducao.html"><a href="introducao.html#revisao-bibliografica"><i class="fa fa-check"></i><b>2.3</b> Revisão bibliográfica</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="problema.html"><a href="problema.html"><i class="fa fa-check"></i><b>3</b> Problema</a><ul>
 <li class="chapter" data-level="3.1" data-path="problema.html"><a href="problema.html#variantes"><i class="fa fa-check"></i><b>3.1</b> Variantes</a><ul>
@@ -157,15 +157,81 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="introducao" class="section level1">
 <h1><span class="header-section-number">Capítulo 2</span> Introdução</h1>
+<p>CAPTCHAs (<em>Completely Automated Public Turing test to tell Computers and Humans Apart</em>) são desafios criados com soluções fáceis de obter por humanos, mas difíceis de obter por robôs. Os CAPTCHAs nasceram entre 2000 e 2002 nos laboratórios da universidade de Carnegie Mellon <span class="citation">(Ahn, Blum, and Langford <a href="#ref-von2002telling">2002</a>)</span>, como uma tecnologia utilizada para evitar ataques <em>spam</em>.</p>
+<p>Ao longo dos anos, os CAPTCHAs tornaram-se comuns em diversas páginas da internet, podendo ser encontrados a partir de desafios de visão, audição, operações matemáticas, entre outros. Essa popularidade também trouxe iniciativas para resolver CAPTCHAs automaticamente, a partir de inputs humanos, heurísticas codificadas manualmente e até sistemas mais sofisticados de inteligência artificial. A disputa entre geradores e resolvedores gera debates profundos até os dias de hoje.</p>
+<p>Apesar da origem na criptografia e motivação prática, pode-se argumentar que CAPTCHAs representam um problema geral da inteligência artificial <span class="citation">(George et al. <a href="#ref-george2017generative">2017</a>)</span>.</p>
+<p>Essencialmente, o CAPTCHA (baseado em imagens) é uma resposta natural para pergunta de pesquisa: que aspecto da visão humana não pode ser automatizado? Essa pergunta serve não só para criar novos CAPTCHAs mas também para orientar a pesquisa em visão computacional.</p>
+<p>Uma forma ad-hoc de responder à essa pergunta é criando desafios complexos. Por exemplo, elaborando tarefas de identificar textos dentro de imagens completamente distorcidas e cheias de ruído. No entanto, hoje somos perfeitamente capazes de resolver esse problema com altíssima taxa de acerto, muitas vezes mais altas que de humanos. Para isso, só precisamos de uma base de dados de treino suficientemente grande e modelos de aprendizado estatístico flexíveis, que chamamos de força-bruta. Discutiremos sobre isso no Capítulo 3.</p>
+<p>Talvez a resposta não esteja na dificuldade, mas no contexto. Ao mudar o ambiente que circunda a tarefa, mudamos a base de dados necessária para lidar com o problema. Como o levantamento de novas bases de dados de treino é custosa, essa estratégia torna a resolução por métodos de força-bruta inexequíveis. Esse racional foi a base da criação da versão dois do <strong>reCaptcha</strong> da Google, amplamente utilizada nos dias de hoje. O reCaptcha pode ser considerado o problema a ser batido nessa área.</p>
+<p>E de que forma podemos avançar na pesquisa? Nossa hipótese, que é o objeto principal dessa tese, é a de que é possível desenvolver técnicas para aumentar a eficiência e a capacidade de generalização dos modelos para resolver CAPTCHAs baseados em textos, aproveitando ao máximo o que existe de informação disponível no contexto de CAPTCHAs e visão computacional. Qualquer passo positivo nesse sentido é um novo avanço na pesquisa de resolução de CAPTCHAs e, consequentemente, em problemas mais profundos de inteligência artificial.</p>
+<p>A jornada a deste projeto de doutorado parte do problema geral dos CAPTCHAs e se encerra na apresentação e avaliação de diversas abordagens para aumentar a eficiência e a capacidade de generalização dos modelos. No caminho, faremos uma ponte entre modelos estatísticos usuais e modelos de redes neurais convolucionais, com o intuito de mostrar que essencialmente estamos apenas estendendo modelos, não abandonando a estatística clássica.</p>
+<p>Nesse primeiro produto de qualificação, definimos o problema geral dos CAPTCHAs e suas variantes. Em seguida, mostramos a solução clássica e a solução força-bruta para o problema, apresentando os resultados obtidos até o momento. Encerramos o trabalho apresentando informalmente com os conceitos de eficiência e generalização, apontando os próximos passos que a pesquisa deve seguir.</p>
 <div id="objetivos" class="section level2">
 <h2><span class="header-section-number">2.1</span> Objetivos</h2>
+<p>O objetivo geral dessa tese é buscar formas eficientes e gerais de resolver CAPTCHAs de imagens baseados em textos.</p>
+<p>Os objetivos específicos são:</p>
+<ul>
+<li>Definir o problema do CAPTCHA e duas variações</li>
+<li>Mostrar uma solução força-bruta que funciona com alta taxa de acurácia</li>
+<li>Realizar uma ponte teórica entre regressão logística e redes neurais convolucionais</li>
+<li>Desenvolver uma ferramenta para resolver CAPTCHAs que seja útil e simples de utilizar.</li>
+<li>Discutir e testar diversas abordagens para aumentar eficiência e capacidade de generalização dos modelos.</li>
+</ul>
 </div>
 <div id="resultados-esperados" class="section level2">
-<h2><span class="header-section-number">2.2</span> Resultados Esperados</h2>
+<h2><span class="header-section-number">2.2</span> Resultados esperados</h2>
+<p>O projeto de doutorado já possui novos avanços relevantes nesses pontos:</p>
+<ul>
+<li>Implementação colaborativa do pacote <code>decryptr</code> na linguagem R para resolver CAPTCHAs</li>
+<li>Ponte teórica entre modelo de regressão logística e redes neurais convolucionais utilizando notação comum para estatísticos.</li>
+<li>Levantamento de lista curada de artigos sobre o tema.</li>
+<li>Resolução de diversos CAPTCHAs que nunca foram trabalhados no passado.</li>
+</ul>
+<p>Ao final do projeto, teremos mais esses novos avanços:</p>
+<ul>
+<li>Implementação das metodologias mais recentes de forma reprodutível</li>
+<li>Estudo e validação de abordagens para aumentar eficiência e generalização dos algoritmos</li>
+<li>Investigação do uso de aprendizado por reforço e aproveitamento do oráculo</li>
+</ul>
 </div>
-<div id="organizacao-do-trabalho" class="section level2">
-<h2><span class="header-section-number">2.3</span> Organização do trabalho</h2>
+<div id="revisao-bibliografica" class="section level2">
+<h2><span class="header-section-number">2.3</span> Revisão bibliográfica</h2>
+<p>A produção acadêmica sobre CAPTCHAs se agrupa em dois tópicos: geração e resolução. Os artigos de geração buscam as formas mais eficazes de criar tarefas difíceis para robôs e fáceis para humanos. Já os artigos de resolução tentam criar novos métodos para lidar com os CAPTCHAs mais comuns da internet.</p>
+<p><span class="citation">(Ahn, Blum, and Langford <a href="#ref-von2002telling">2002</a>)</span> define captchas pela primeira vez. <span class="citation">Von Ahn et al. (<a href="#ref-von2003captcha">2003</a>)</span> deduz o problema de resolver CAPTCHA a partir de uma definição matemática genérica do problema da inteligência artificial. <span class="citation">Mori and Malik (<a href="#ref-mori2003recognizing">2003</a>)</span> apresentam uma solução rudimentar para o problema a partir de cortes em imagens. O modelo final acerta somente 33% dos casos. <span class="citation">Yan and El Ahmad (<a href="#ref-yan2008low">2008</a><a href="#ref-yan2008low">a</a>)</span> criam um modelo de quebrar CAPTCHAs baseado em diversas heurísticas. <span class="citation">Yan and El Ahmad (<a href="#ref-yan2008usability">2008</a><a href="#ref-yan2008usability">b</a>)</span> apresentam os principais problemas de utilização no desenvolvimento de CAPTCHAs concluindo, principalmente, que CAPTCHAs baseados em textos podem sim ser desafios complexos. <span class="citation">Golle (<a href="#ref-golle2008machine">2008</a>)</span> utilizam máquinas de vetor de suporte pela primeira vez. <span class="citation">Motoyama et al. (<a href="#ref-motoyama2010re">2010</a>)</span> estudam o aspecto econômico dos reCaptchas, avaliando o impacto de sua utilização ampla em toda a internet. <span class="citation">Bursztein, Martin, and Mitchell (<a href="#ref-bursztein2011text">2011</a>)</span> testam diversos modelos em 15 captchas diferentes e concluem que a melhor forma de criar CAPTCHAs complicados é colando as letras. <span class="citation">Bursztein et al. (<a href="#ref-bursztein2014end">2014</a>)</span> mostram pela primeira vez um modelo um modelo de aprendizado por reforço, utilizando feedbacks humanos. <span class="citation">George et al. (<a href="#ref-george2017generative">2017</a>)</span> desenvolvem um novo modelo capaz de quebrar CAPTCHAs a partir de pouquíssimos exemplos.</p>
 
+</div>
+</div>
+<h3> CAPTCHAs em áudio</h3>
+<div id="refs" class="references">
+<div id="ref-von2002telling">
+<p>Ahn, Louis von, Manuel Blum, and John Langford. 2002. “Telling Humans and Computers Apart Automatically or How Lazy Cryptographers Do Ai.” <em>Computer Science Department</em>, 149.</p>
+</div>
+<div id="ref-george2017generative">
+<p>George, Dileep, Wolfgang Lehrach, Ken Kansky, Miguel Lázaro-Gredilla, Christopher Laan, Bhaskara Marthi, Xinghua Lou, et al. 2017. “A Generative Vision Model That Trains with High Data Efficiency and Breaks Text-Based Captchas.” <em>Science</em> 358 (6368). American Association for the Advancement of Science: eaag2612.</p>
+</div>
+<div id="ref-von2003captcha">
+<p>Von Ahn, Luis, Manuel Blum, Nicholas J Hopper, and John Langford. 2003. “CAPTCHA: Using Hard Ai Problems for Security.” In <em>International Conference on the Theory and Applications of Cryptographic Techniques</em>, 294–311. Springer.</p>
+</div>
+<div id="ref-mori2003recognizing">
+<p>Mori, Greg, and Jitendra Malik. 2003. “Recognizing Objects in Adversarial Clutter: Breaking a Visual Captcha.” In <em>Computer Vision and Pattern Recognition, 2003. Proceedings. 2003 Ieee Computer Society Conference on</em>, 1:I–I. IEEE.</p>
+</div>
+<div id="ref-yan2008low">
+<p>Yan, Jeff, and Ahmad Salah El Ahmad. 2008a. “A Low-Cost Attack on a Microsoft Captcha.” In <em>Proceedings of the 15th Acm Conference on Computer and Communications Security</em>, 543–54. ACM.</p>
+</div>
+<div id="ref-yan2008usability">
+<p>Yan, Jeff, and Ahmad Salah El Ahmad. 2008b. “Usability of Captchas or Usability Issues in Captcha Design.” In <em>Proceedings of the 4th Symposium on Usable Privacy and Security</em>, 44–52. ACM.</p>
+</div>
+<div id="ref-golle2008machine">
+<p>Golle, Philippe. 2008. “Machine Learning Attacks Against the Asirra Captcha.” In <em>Proceedings of the 15th Acm Conference on Computer and Communications Security</em>, 535–42. ACM.</p>
+</div>
+<div id="ref-motoyama2010re">
+<p>Motoyama, Marti, Kirill Levchenko, Chris Kanich, Damon McCoy, Geoffrey M Voelker, and Stefan Savage. 2010. “Re: CAPTCHAs-Understanding Captcha-Solving Services in an Economic Context.” In <em>USENIX Security Symposium</em>, 10:3.</p>
+</div>
+<div id="ref-bursztein2011text">
+<p>Bursztein, Elie, Matthieu Martin, and John Mitchell. 2011. “Text-Based Captcha Strengths and Weaknesses.” In <em>Proceedings of the 18th Acm Conference on Computer and Communications Security</em>, 125–38. ACM.</p>
+</div>
+<div id="ref-bursztein2014end">
+<p>Bursztein, Elie, Jonathan Aigrain, Angelika Moscicki, and John C Mitchell. 2014. “The End Is Nigh: Generic Solving of Text-Based Captchas.” In <em>WOOT</em>.</p>
 </div>
 </div>
             </section>

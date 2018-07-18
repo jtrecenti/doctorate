@@ -105,8 +105,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="introducao.html"><a href="introducao.html"><i class="fa fa-check"></i><b>2</b> Introdução</a><ul>
 <li class="chapter" data-level="2.1" data-path="introducao.html"><a href="introducao.html#objetivos"><i class="fa fa-check"></i><b>2.1</b> Objetivos</a></li>
-<li class="chapter" data-level="2.2" data-path="introducao.html"><a href="introducao.html#resultados-esperados"><i class="fa fa-check"></i><b>2.2</b> Resultados Esperados</a></li>
-<li class="chapter" data-level="2.3" data-path="introducao.html"><a href="introducao.html#organizacao-do-trabalho"><i class="fa fa-check"></i><b>2.3</b> Organização do trabalho</a></li>
+<li class="chapter" data-level="2.2" data-path="introducao.html"><a href="introducao.html#resultados-esperados"><i class="fa fa-check"></i><b>2.2</b> Resultados esperados</a></li>
+<li class="chapter" data-level="2.3" data-path="introducao.html"><a href="introducao.html#revisao-bibliografica"><i class="fa fa-check"></i><b>2.3</b> Revisão bibliográfica</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="problema.html"><a href="problema.html"><i class="fa fa-check"></i><b>3</b> Problema</a><ul>
 <li class="chapter" data-level="3.1" data-path="problema.html"><a href="problema.html#variantes"><i class="fa fa-check"></i><b>3.1</b> Variantes</a><ul>
@@ -158,7 +158,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="problema" class="section level1">
 <h1><span class="header-section-number">Capítulo 3</span> Problema</h1>
 <p>O problema do Captcha pode ser entendido como um problema de classificação de imagens. Especificamente, nosso interesse é criar uma função <span class="math inline">\(g\)</span> que recebe uma imagem <span class="math inline">\(\mathbf X = \{x_{nmr} \in [0,1]\}_{N\times M \times R}\)</span> e retorna um vetor de índices <span class="math inline">\(\mathbf y\)</span>, sendo que cada índice <span class="math inline">\(y_j\)</span> corresponde a um caractere <span class="math inline">\(c_j\)</span>, <span class="math inline">\(j = 1, \dots, L\)</span>, onde <span class="math inline">\(L\)</span> é o número de caracteres contidos na imagem. Chamaremos <span class="math inline">\(L\)</span> de <em>comprimento</em> do Captcha.</p>
-<p>Das afirmações anteriores podemos tirar três conclusões.</p>
+<p>Podemos detalhar as afirmações anteriores em três itens, listados abaixo.</p>
 <ol style="list-style-type: decimal">
 <li>Nossa variável <strong>explicativa</strong>, a imagem, é uma matriz <span class="math inline">\(\mathbf X = \{x_{ijk}\}_{N\times M \times R}\)</span>, em que <span class="math inline">\(N\)</span> é o número de linhas, <span class="math inline">\(M\)</span> é o número de colunas e <span class="math inline">\(R\)</span> é o número de <em>cores</em>, ou <em>canais</em>.</li>
 </ol>
@@ -168,24 +168,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><p>O objeto <span class="math inline">\(C \in \mathcal A^L\)</span> é um vetor de itens de um alfabeto <span class="math inline">\(\mathcal A\)</span> com tamanho <span class="math inline">\(|\mathcal A|\)</span>, finito e conhecido. Esse alfabeto contém todos os possíveis caracteres que podem aparecer na imagem.</p></li>
 <li><p>Nossa <strong>resposta</strong> <span class="math inline">\(\mathbf y \in \mathbb \{1, \dots, |\mathcal A|\}^L\)</span> é um vetor de índices de tamanho fixo. Cada elemento de <span class="math inline">\(\mathbf y\)</span> representa um valor do alfabeto <span class="math inline">\(\mathcal A\)</span>.</p></li>
 </ol>
-<p>A construção de uma função <span class="math inline">\(g\)</span> capaz de mapear <span class="math inline">\(\mathbf y\)</span> a partir de uma nova imagem <span class="math inline">\(\mathbf X\)</span> depende de uma amostra de imagens <span class="math inline">\(\mathbf X_1, \dots, \mathbf X_S\)</span> corretamente classificadas por <span class="math inline">\(\mathbf y_1, \dots, \mathbf y_S\)</span>. A tarefa é, portanto, estimar uma função <span class="math inline">\(\hat g\)</span> com o objetivo de minimizar.</p>
+<p>A construção de uma função <span class="math inline">\(g\)</span> capaz de mapear <span class="math inline">\(\mathbf y\)</span> a partir de uma nova imagem <span class="math inline">\(\mathbf X\)</span> depende de uma amostra de imagens <span class="math inline">\(\mathbf X_1, \dots, \mathbf X_S\)</span> corretamente classificadas por <span class="math inline">\(\mathbf y_1, \dots, \mathbf y_S\)</span>. A tarefa é, portanto, obter uma estimativa <span class="math inline">\(\hat g\)</span> para a função <span class="math inline">\(g\)</span> que minimiza</p>
 <p><span class="math display">\[
-L(g(\mathbf X), \mathbf y) = \mathbb I(g(\mathbf X) \neq \mathbf y)
+L(\hat g(\mathbf X), \mathbf y) = \mathbb I(g(\mathbf X) \neq \mathbf y)
 \]</span></p>
 <p>em que <span class="math inline">\(\mathbb I\)</span> é a função indicadora.</p>
 <div id="variantes" class="section level2">
 <h2><span class="header-section-number">3.1</span> Variantes</h2>
 <div id="audio" class="section level3">
 <h3><span class="header-section-number">3.1.1</span> Áudio</h3>
-<p>Captchas também podem se manifestar na forma de áudio. Nesses casos, o usuário é condicionado a ouvir um áudio e transcrever seu conteúdo em um texto.</p>
+<p>Captchas também ser encontrados na forma de áudio. Nesses casos, o usuário é condicionado a ouvir um áudio e transcrever seu conteúdo em um texto.</p>
 <p>Com base nos Captchas analisados durante o desenvolvimento do trabalho, verificamos que Captchas de áudio são menos complexos. Por exemplo, alguns destes são formados por sons sem ruído. Ou seja, uma tabela de sons e classificações seria suficiente para quebrar os Captchas.</p>
-<p>Nos casos com ruído, podemos utilizar duas técnicas para quebrar Captchas de áudio. A primeira é baseada em engenharia de características [ref], que extrai covariáveis dos áudios, para serem utilizados posteriormente em um modelo de regressão clássico. O segundo método consiste em calcular o espectrograma do áudio e tratá-lo como um Captcha de imagem.</p>
+<p>Nos casos com ruído, podemos utilizar duas técnicas para quebrar Captchas de áudio. A primeira é baseada em engenharia de características [ref], que extrai covariáveis dos áudios, para serem utilizadas posteriormente em um modelo de regressão clássico. O segundo método consiste em calcular o espectrograma do áudio e tratá-lo como um Captcha de imagem.</p>
 </div>
 <div id="covariaveis-e-numero-de-respostas-variavel" class="section level3">
 <h3><span class="header-section-number">3.1.2</span> Covariáveis e número de respostas variável</h3>
 <p>Outra forma comum de manifestação de Captchas são imagens em que o número de letras varia. Esse problema é mais complexo que o anterior pois a variável resposta não é mais um vetor de tamanho <span class="math inline">\(L\)</span> fixo.</p>
 <p>Assumindo que o número de letras máximo que aparece numa imagem é fixo, uma solução para o problema de tamanho variável é considerar um caractere adicional <code>_</code> no alfabeto, chamado <em>placeholder</em>, que representa a ausência do caractere em determinada posição. Assim, uma imagem com <span class="math inline">\(L_{\max} = 5\)</span>, por exemplo, poderia ter uma classificação <code>cad5_</code>, que tem apenas quatro letras.</p>
-<p>O problema dessa proposta é que a posição dos <em>placeholders</em> não importa na classificação do captcha. Ou seja, as soluções <code>cad5_</code>, <code>ca_d5</code> e <code>_cad5</code> são equivalentes. Isso torna o problema mais difícil de controlar.</p>
+<p>O problema dessa proposta é que a posição dos <em>placeholders</em> não importa na classificação do captcha. Ou seja, as soluções <code>cad5_</code>, <code>ca_d5</code> e <code>_cad5</code> são equivalentes. Isso aumenta a dificuldade na estimação dos parâmetros por gerar mais ótimos locais.</p>
 <p>Outra alternativa para o problema é considerar que um de nossos interesses de predição é justamente o número de letras. Assim, teríamos</p>
 <p><span class="math display">\[
 \tilde{\mathbf{y}} = \left[l \;\; \mathbf y^\top \right]^\top,

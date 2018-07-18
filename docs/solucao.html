@@ -105,8 +105,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="introducao.html"><a href="introducao.html"><i class="fa fa-check"></i><b>2</b> Introdução</a><ul>
 <li class="chapter" data-level="2.1" data-path="introducao.html"><a href="introducao.html#objetivos"><i class="fa fa-check"></i><b>2.1</b> Objetivos</a></li>
-<li class="chapter" data-level="2.2" data-path="introducao.html"><a href="introducao.html#resultados-esperados"><i class="fa fa-check"></i><b>2.2</b> Resultados Esperados</a></li>
-<li class="chapter" data-level="2.3" data-path="introducao.html"><a href="introducao.html#organizacao-do-trabalho"><i class="fa fa-check"></i><b>2.3</b> Organização do trabalho</a></li>
+<li class="chapter" data-level="2.2" data-path="introducao.html"><a href="introducao.html#resultados-esperados"><i class="fa fa-check"></i><b>2.2</b> Resultados esperados</a></li>
+<li class="chapter" data-level="2.3" data-path="introducao.html"><a href="introducao.html#revisao-bibliografica"><i class="fa fa-check"></i><b>2.3</b> Revisão bibliográfica</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="problema.html"><a href="problema.html"><i class="fa fa-check"></i><b>3</b> Problema</a><ul>
 <li class="chapter" data-level="3.1" data-path="problema.html"><a href="problema.html#variantes"><i class="fa fa-check"></i><b>3.1</b> Variantes</a><ul>
@@ -157,15 +157,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="solucao" class="section level1">
 <h1><span class="header-section-number">Capítulo 4</span> Solução</h1>
-<p><span class="citation">(Ahn, Blum, and Langford <a href="#ref-von2002telling">2002</a>)</span> define captchas pela primeira vez</p>
-<p><span class="citation">(Von Ahn et al. <a href="#ref-von2003captcha">2003</a>)</span> define um problema de resolver captcha como um problema de inteligência artificial.</p>
-<p><span class="citation">(Mori and Malik <a href="#ref-mori2003recognizing">2003</a>)</span> apresenta uma solução rudimentar para o problema a partir de cortes em imagens. O modelo final acerta somente 33% dos casos.</p>
-<p><span class="citation">(Yan and El Ahmad <a href="#ref-yan2008low">2008</a><a href="#ref-yan2008low">a</a>)</span> criam um modelo de quebrar captcha baseado em diversas heurísticas.</p>
-<p><span class="citation">(Yan and El Ahmad <a href="#ref-yan2008usability">2008</a><a href="#ref-yan2008usability">b</a>)</span> usability issues in CAPTCHA design</p>
-<p><span class="citation">(Golle <a href="#ref-golle2008machine">2008</a>)</span> utilizam SVM</p>
-<p><span class="citation">(Motoyama et al. <a href="#ref-motoyama2010re">2010</a>)</span> estudam o aspecto economico dos recaptchas</p>
-<p><span class="citation">(Bursztein, Martin, and Mitchell <a href="#ref-bursztein2011text">2011</a>)</span> testam varios modelos em 15 captchas diferentes</p>
-<p><span class="citation">(Bursztein et al. <a href="#ref-bursztein2014end">2014</a>)</span> mostram um modelo de reinforcement</p>
 <div id="segmentacao-e-classificacao" class="section level2">
 <h2><span class="header-section-number">4.1</span> Segmentação e classificação</h2>
 <p>Um problema de resolver o CAPTCHA diretamente é que a variável resposta <span class="math inline">\(\mathbf y\)</span> tem um número exponencial de combinações. Na formulação do capítulo anterior, nossa resposta é uma palavra de <span class="math inline">\(L\)</span> caracteres, sendo que cada caractere <span class="math inline">\(c_j\)</span> pode ter <span class="math inline">\(|\mathcal A|\)</span> valores. Nessa construção, o total de combinações é <span class="math inline">\(|\mathcal A|^L\)</span>.</p>
@@ -182,7 +173,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 Figura 4.1: CAPTCHA do TJMG.
 </p>
 </div>
-<p>Nesse caso, é podemos resolver o problema da segmentação realizando cortes fixos na imagem. Podemos também limitar os eixos <code>x</code>, tirando os espaços vazios à esquerda e à direita e <code>y</code>, removendo espaços superiores e inferiores. Por último, transformamos a imagem em escala de cinza. O resultado dessas operações de pré-processamento estão na Figura <a href="solucao.html#fig:tjmg2">4.2</a>.</p>
+<p>Nesse caso, podemos resolver o problema da segmentação realizando cortes fixos na imagem. Podemos também limitar os eixos <code>x</code>, tirando os espaços vazios à esquerda e à direita e <code>y</code>, removendo espaços superiores e inferiores. Por último, transformamos a imagem em escala de cinza. O resultado dessas operações de pré-processamento estão na Figura <a href="solucao.html#fig:tjmg2">4.2</a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">op &lt;-<span class="st"> </span>graphics<span class="op">::</span><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">4</span>))
 arq_captcha <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">read_captcha</span>() <span class="op">%&gt;%</span><span class="st"> </span>
@@ -280,157 +271,7 @@ Figura 4.2: CAPTCHA do TJMG após segmentação.
 </tbody>
 </table>
 <p>Agora basta rodar o mesmo para toda a base de treino e rodar um modelo. Nesse exemplo, utilizamos uma base de 1500 CAPTCHAs classificados. O resultado após o pré-processamento é uma base com 7500 linhas e 520 colunas. Escolhemos manter 6000 linhas para treino e as 1500 restantes para teste. Utilizamos um modelo de florestas aleatórias para o exemplo <span class="citation">(Breiman <a href="#ref-breiman2001random">2001</a>)</span>.</p>
-<p>O resultado do modelo pode ser verificado na Tabela <a href="solucao.html#tab:errosTJMG">4.2</a>, que mostra os observados <em>versus</em> preditos na base de teste. O acerto foi de 99.6% em cada caractere. Assumindo que o erro não depende da posição do caractere no CAPTCHA, o acerto para a imagem completa é de aproximadamente 98%.</p>
-<table>
-<caption><span id="tab:errosTJMG">Tabela 4.2: </span>Tabela de acertos e erros.</caption>
-<thead>
-<tr class="header">
-<th align="left">y</th>
-<th align="left">0</th>
-<th align="left">1</th>
-<th align="left">2</th>
-<th align="left">3</th>
-<th align="left">4</th>
-<th align="left">5</th>
-<th align="left">6</th>
-<th align="left">7</th>
-<th align="left">8</th>
-<th align="left">9</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">0</td>
-<td align="left">156</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-</tr>
-<tr class="even">
-<td align="left">1</td>
-<td align="left">.</td>
-<td align="left">160</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-</tr>
-<tr class="odd">
-<td align="left">2</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">147</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-</tr>
-<tr class="even">
-<td align="left">3</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">1</td>
-<td align="left">140</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-</tr>
-<tr class="odd">
-<td align="left">4</td>
-<td align="left">.</td>
-<td align="left">2</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">150</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-</tr>
-<tr class="even">
-<td align="left">5</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">153</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-</tr>
-<tr class="odd">
-<td align="left">6</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">143</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-</tr>
-<tr class="even">
-<td align="left">7</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">152</td>
-<td align="left">.</td>
-<td align="left">.</td>
-</tr>
-<tr class="odd">
-<td align="left">8</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">2</td>
-<td align="left">1</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">139</td>
-<td align="left">.</td>
-</tr>
-<tr class="even">
-<td align="left">9</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">.</td>
-<td align="left">1</td>
-<td align="left">153</td>
-</tr>
-</tbody>
-</table>
+<p>O resultado do modelo pode ser verificado na Tabela <a href="#tab:errosTJMG"><strong>??</strong></a>, que mostra os observados <em>versus</em> preditos na base de teste. O acerto foi de 99.6% em cada caractere. Assumindo que o erro não depende da posição do caractere no CAPTCHA, o acerto para a imagem completa é de aproximadamente 98%.</p>
 <p>O resultado para o TJMG é bastante satisfatório, mas não generaliza para outros CAPTCHAs. Tome por exemplo o CAPTCHA da Receita Federal (RFB) da Figura <a href="solucao.html#fig:generalize">4.3</a>. Nesse caso, a posição dos caracteres muda significativamente de imagem para imagem, e assim fica difícil cortar em pedaços.</p>
 <div class="figure" style="text-align: center"><span id="fig:generalize"></span>
 <img src="jtrecenti_doctorate_captcha_files/figure-html/generalize-1.svg" alt="CAPTCHA Receita Federal" width="12%" />
@@ -563,26 +404,34 @@ D(\mathbf y|{ \boldsymbol \beta}) &amp;= \sum_{i=1}^n y_i\log(y_i) + (1-y_i)\log
 </div>
 <div id="a-operacao-de-convolucao" class="section level3">
 <h3><span class="header-section-number">4.2.2</span> A operação de convolução</h3>
-<p>Convolução em imagens é uma operação usada há muito tempo nas áreas de <em>visão computacional</em> e <em>processamento de sinais</em>. Ela geralmente é utilizada para detectar padrões e aplicar filtros em imagens. Basicamente, o que ela faz é calcular um novo valor para um pixel da imagem com base nos pixels da vizinhança. Por exemplo, você pode fazer com que o pixel <span class="math inline">\((i,j)\)</span> da sua imagem seja atualizado pela soma ponderada dos valores dos pixels na vizinhança.</p>
-<p>Uma forma esperta de fazer essa soma ponderada é criando uma matriz de pesos: dessa forma, você não precisa ficar procurando os pontos da vizinhança. Para cada ponto <span class="math inline">\((i,j)\)</span>, você pega o subset da matriz de vizinhança, multiplica pontualmente pela matriz de pesos e soma todos os valores. Isso é <em>exatamente</em> o que a convolução faz.</p>
-<p>Daqui em diante, chamaremos essa matriz de pesos de <strong>kernel</strong>. Considere esse exemplo 3x3:</p>
+<p>Convolução em imagens é uma operação usada nas áreas de <em>visão computacional</em> e <em>processamento de sinais</em>. Ela é utilizada para detectar padrões e aplicar filtros em imagens. Na prática, o que ela faz é calcular um novo valor para um pixel na posição <span class="math inline">\((i,j)\)</span> de uma imagem com base nos valores dos pixels da vizinhança.</p>
+<p>Uma forma esperta de fazer essa soma ponderada é criando uma matriz de pesos. Com ela, não é necessário procurar os pontos da vizinhança. Para cada ponto <span class="math inline">\((i,j)\)</span>, obtemos a matriz de vizinhança, multiplicamos pontualmente pela matriz de pesos e somamos os valores resultantes. Chamaremos essa matriz de pesos de <strong>kernel</strong>.</p>
+<p>Considere esse exemplo 3x3:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kern_horizontal &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>),
                          <span class="kw">c</span>( <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>),
                          <span class="kw">c</span>( <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))
 kern_horizontal</code></pre></div>
-<p>E considere essa imagem super complexa:</p>
+<p>E considere a seguinte imagem:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="st">&quot;imgs/emoji3.png&quot;</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>magick<span class="op">::</span><span class="kw">image_read</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">plot</span>()</code></pre></div>
-<p>Na prática, essa imagem é isso aqui (tirei algumas linhas e colunas):</p>
+<p>A imagem é construída a partir dessa matriz:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">emoji &lt;-<span class="st"> </span>decryptr<span class="op">:::</span><span class="kw">load_image</span>(<span class="st">&quot;imgs/emoji3.png&quot;</span>)[,,<span class="dv">1</span>] 
 <span class="kw">round</span>(emoji, <span class="dv">1</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>]</code></pre></div>
 <p>Tome por exemplo o ponto <span class="math inline">\((i,j) = (12,16)\)</span>. A vizinhança 3x3 em torno desse ponto é dada por</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">emoji[<span class="dv">12</span> <span class="op">+</span><span class="st"> </span>(<span class="op">-</span><span class="dv">1</span>)<span class="op">:</span><span class="dv">1</span>, <span class="dv">16</span> <span class="op">+</span><span class="st"> </span>(<span class="op">-</span><span class="dv">1</span>)<span class="op">:</span><span class="dv">1</span>]</code></pre></div>
 <p>A operação de convolução é feita da seguinte forma:</p>
+<p><span class="math display">\[
+\begin{aligned}
+p^{\text{new}}_{12,16} 
+&amp;= k_{1,1}p_{11,15} + k_{1,2}p_{11,16} + k_{1,3}p_{11,17} + \\
+&amp;+ k_{2,1}p_{12,15} + k_{2,2}p_{12,16} + k_{2,3}p_{12,17} + \\
+&amp;+ k_{3,1}p_{13,15} + k_{3,2}p_{13,16} + k_{3,3}p_{13,17}
+\end{aligned}
+\]</span></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(emoji[<span class="dv">12</span> <span class="op">+</span><span class="st"> </span>(<span class="op">-</span><span class="dv">1</span>)<span class="op">:</span><span class="dv">1</span>, <span class="dv">16</span> <span class="op">+</span><span class="st"> </span>(<span class="op">-</span><span class="dv">1</span>)<span class="op">:</span><span class="dv">1</span>] <span class="op">*</span><span class="st"> </span>kern_horizontal)</code></pre></div>
-<p>Pronto, esse é o valor a ser colocado no ponto <span class="math inline">\((i,j)\)</span>. Fazemos isso para todos os outros pontos. Algumas dúvidas que podem rolar nesse ponto:</p>
-<p>Com base nisso, montamos um algoritmo que faz a conta para todos os pixels, já criando uma borda na imagem:</p>
+<p>Esse é o valor a ser colocado no ponto <span class="math inline">\((i,j)\)</span>. Isso funciona em todos os pontos que não estão na borda da imagem.</p>
+<p>Existem duas formas de trabalhar com as bordas da imagem. A primeira é preenchendo as bordas com zeros, de forma a considerar apenas os pontos da imagem. A segunda é descartar os pontos da borda e retornar uma imagem menor, contendo somente os pixels em que foi possível aplicar todo o kernel.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">convolve &lt;-<span class="st"> </span><span class="cf">function</span>(img, kern) {
   <span class="co"># monta a bordinha na imagem. A borda deve ter (tamanho kernel) / 2,</span>
   <span class="co"># de tamanho, arredondando para baixo</span>
@@ -598,13 +447,12 @@ kern_horizontal</code></pre></div>
   img[,,<span class="dv">2</span>] &lt;-<span class="st"> </span>img[,,<span class="dv">3</span>] &lt;-<span class="st"> </span>img[,,<span class="dv">1</span>]
   img
 }</code></pre></div>
-<p>Voltando para nossa imagem agora. No nosso caso, o resultado fica assim:</p>
+<p>No nosso caso, o resultado da convolução fica como na Figura <a href="#fig:xxx"><strong>??</strong></a>. Essa matriz não foi escolhida por acaso. Ela serve para destacar padrões horizontais da imagem. Como a primeira linha é formada <code>-1</code>s e a última é formada por <code>1</code>s, a matriz fica com valor alto se a parte de cima do pixel for preta e a parte de baixo for branca (<code>grande * 1 + pequeno * (-1)</code>). A parte destacada da imagem acabou sendo os olhos (pois temos maior concentração de pixels pretos ali), além das extremidades superior e inferior do rosto.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="st">&quot;imgs/emoji3.png&quot;</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>decryptr<span class="op">:::</span><span class="kw">load_image</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">convolve</span>(kern_horizontal) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>magick<span class="op">::</span><span class="kw">image_read</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">plot</span>()</code></pre></div>
-<p>Ficou um pouco assustador, não? Essa matriz não foi escolhida por acaso. Ela serve para destacar padrões horizontais da imagem. Como a primeira linha é formada <code>-1</code>s e a última é formada por <code>1</code>s, a matriz fica com valor alto se a parte de cima do pixel for preta e a parte de baixo for branca (<code>grande * 1 + pequeno * (-1)</code>). A parte destacada da imagem acabou sendo os olhos (pois temos maior concentração de pixels pretos ali), além das extremidades superior e inferior do rosto.</p>
 <p>Com esse kernel aqui (vertical), a parte destacada do rosto são as extremidades dos lados:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">kern_vertical &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
                        <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
@@ -726,30 +574,6 @@ arq <span class="op">%&gt;%</span><span class="st"> </span>
 </div>
 <h3> CAPTCHAs em áudio</h3>
 <div id="refs" class="references">
-<div id="ref-von2002telling">
-<p>Ahn, Louis von, Manuel Blum, and John Langford. 2002. “Telling Humans and Computers Apart Automatically or How Lazy Cryptographers Do Ai.” <em>Computer Science Department</em>, 149.</p>
-</div>
-<div id="ref-von2003captcha">
-<p>Von Ahn, Luis, Manuel Blum, Nicholas J Hopper, and John Langford. 2003. “CAPTCHA: Using Hard Ai Problems for Security.” In <em>International Conference on the Theory and Applications of Cryptographic Techniques</em>, 294–311. Springer.</p>
-</div>
-<div id="ref-mori2003recognizing">
-<p>Mori, Greg, and Jitendra Malik. 2003. “Recognizing Objects in Adversarial Clutter: Breaking a Visual Captcha.” In <em>Computer Vision and Pattern Recognition, 2003. Proceedings. 2003 Ieee Computer Society Conference on</em>, 1:I–I. IEEE.</p>
-</div>
-<div id="ref-yan2008low">
-<p>Yan, Jeff, and Ahmad Salah El Ahmad. 2008a. “A Low-Cost Attack on a Microsoft Captcha.” In <em>Proceedings of the 15th Acm Conference on Computer and Communications Security</em>, 543–54. ACM.</p>
-</div>
-<div id="ref-yan2008usability">
-<p>Yan, Jeff, and Ahmad Salah El Ahmad. 2008b. “Usability of Captchas or Usability Issues in Captcha Design.” In <em>Proceedings of the 4th Symposium on Usable Privacy and Security</em>, 44–52. ACM.</p>
-</div>
-<div id="ref-golle2008machine">
-<p>Golle, Philippe. 2008. “Machine Learning Attacks Against the Asirra Captcha.” In <em>Proceedings of the 15th Acm Conference on Computer and Communications Security</em>, 535–42. ACM.</p>
-</div>
-<div id="ref-motoyama2010re">
-<p>Motoyama, Marti, Kirill Levchenko, Chris Kanich, Damon McCoy, Geoffrey M Voelker, and Stefan Savage. 2010. “Re: CAPTCHAs-Understanding Captcha-Solving Services in an Economic Context.” In <em>USENIX Security Symposium</em>, 10:3.</p>
-</div>
-<div id="ref-bursztein2011text">
-<p>Bursztein, Elie, Matthieu Martin, and John Mitchell. 2011. “Text-Based Captcha Strengths and Weaknesses.” In <em>Proceedings of the 18th Acm Conference on Computer and Communications Security</em>, 125–38. ACM.</p>
-</div>
 <div id="ref-bursztein2014end">
 <p>Bursztein, Elie, Jonathan Aigrain, Angelika Moscicki, and John C Mitchell. 2014. “The End Is Nigh: Generic Solving of Text-Based Captchas.” In <em>WOOT</em>.</p>
 </div>

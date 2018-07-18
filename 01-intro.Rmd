@@ -1,7 +1,52 @@
 # Introdução
 
+CAPTCHAs (*Completely Automated Public Turing test to tell Computers and Humans Apart*) são desafios criados com soluções fáceis de obter por humanos, mas difíceis de obter por robôs. Os CAPTCHAs nasceram entre 2000 e 2002 nos laboratórios da universidade de Carnegie Mellon [@von2002telling], como uma tecnologia utilizada para evitar ataques *spam*.
+
+Ao longo dos anos, os CAPTCHAs tornaram-se comuns em diversas páginas da internet, podendo ser encontrados a partir de desafios de visão, audição, operações matemáticas, entre outros. Essa popularidade também trouxe iniciativas para resolver CAPTCHAs automaticamente, a partir de inputs humanos, heurísticas codificadas manualmente e até sistemas mais sofisticados de inteligência artificial. A disputa entre geradores e resolvedores gera debates profundos até os dias de hoje.
+
+Apesar da origem na criptografia e motivação prática, pode-se argumentar que CAPTCHAs representam um problema geral da inteligência artificial [@george2017generative]. 
+
+Essencialmente, o CAPTCHA (baseado em imagens) é uma resposta natural para pergunta de pesquisa: que aspecto da visão humana não pode ser automatizado? Essa pergunta serve não só para criar novos CAPTCHAs mas também para orientar a pesquisa em visão computacional.
+
+Uma forma ad-hoc de responder à essa pergunta é criando desafios complexos. Por exemplo, elaborando tarefas de identificar textos dentro de imagens completamente distorcidas e cheias de ruído. No entanto, hoje somos perfeitamente capazes de resolver esse problema com altíssima taxa de acerto, muitas vezes mais altas que de humanos. Para isso, só precisamos de uma base de dados de treino suficientemente grande e modelos de aprendizado estatístico flexíveis, que chamamos de força-bruta. Discutiremos sobre isso no Capítulo 3. 
+
+Talvez a resposta não esteja na dificuldade, mas no contexto. Ao mudar o ambiente que circunda a tarefa, mudamos a base de dados necessária para lidar com o problema. Como o levantamento de novas bases de dados de treino é custosa, essa estratégia torna a resolução por métodos de força-bruta inexequíveis. Esse racional foi a base da criação da versão dois do **reCaptcha** da Google, amplamente utilizada nos dias de hoje. O reCaptcha pode ser considerado o problema a ser batido nessa área.
+
+E de que forma podemos avançar na pesquisa? Nossa hipótese, que é o objeto principal dessa tese, é a de que é possível desenvolver técnicas para aumentar a eficiência e a capacidade de generalização dos modelos para resolver CAPTCHAs baseados em textos, aproveitando ao máximo o que existe de informação disponível no contexto de CAPTCHAs e visão computacional. Qualquer passo positivo nesse sentido é um novo avanço na pesquisa de resolução de CAPTCHAs e, consequentemente, em problemas mais profundos de inteligência artificial.
+
+A jornada a deste projeto de doutorado parte do problema geral dos CAPTCHAs e se encerra na apresentação e avaliação de diversas abordagens para aumentar a eficiência e a capacidade de generalização dos modelos. No caminho, faremos uma ponte entre modelos estatísticos usuais e modelos de redes neurais convolucionais, com o intuito de mostrar que essencialmente estamos apenas estendendo modelos, não abandonando a estatística clássica.
+
+Nesse primeiro produto de qualificação, definimos o problema geral dos CAPTCHAs e suas variantes. Em seguida, mostramos a solução clássica e a solução força-bruta para o problema, apresentando os resultados obtidos até o momento. Encerramos o trabalho apresentando informalmente com os conceitos de eficiência e generalização, apontando os próximos passos que a pesquisa deve seguir.
+
 ## Objetivos {#objetivos}
 
-## Resultados Esperados
+O objetivo geral dessa tese é buscar formas eficientes e gerais de resolver CAPTCHAs de imagens baseados em textos. 
 
-## Organização do trabalho
+Os objetivos específicos são:
+
+- Definir o problema do CAPTCHA e duas variações
+- Mostrar uma solução força-bruta que funciona com alta taxa de acurácia
+- Realizar uma ponte teórica entre regressão logística e redes neurais convolucionais
+- Desenvolver uma ferramenta para resolver CAPTCHAs que seja útil e simples de utilizar.
+- Discutir e testar diversas abordagens para aumentar eficiência e capacidade de generalização dos modelos.
+
+## Resultados esperados
+
+O projeto de doutorado já possui novos avanços relevantes nesses pontos:
+
+- Implementação colaborativa do pacote `decryptr` na linguagem R para resolver CAPTCHAs
+- Ponte teórica entre modelo de regressão logística e redes neurais convolucionais utilizando notação comum para estatísticos.
+- Levantamento de lista curada de artigos sobre o tema.
+- Resolução de diversos CAPTCHAs que nunca foram trabalhados no passado.
+
+Ao final do projeto, teremos mais esses novos avanços:
+
+- Implementação das metodologias mais recentes de forma reprodutível
+- Estudo e validação de abordagens para aumentar eficiência e generalização dos algoritmos
+- Investigação do uso de aprendizado por reforço e aproveitamento do oráculo
+
+## Revisão bibliográfica
+
+A produção acadêmica sobre CAPTCHAs se agrupa em dois tópicos: geração e resolução. Os artigos de geração buscam as formas mais eficazes de criar tarefas difíceis para robôs e fáceis para humanos. Já os artigos de resolução tentam criar novos métodos para lidar com os CAPTCHAs mais comuns da internet. 
+
+[@von2002telling] define captchas pela primeira vez. @von2003captcha deduz o problema de resolver CAPTCHA a partir de uma definição matemática genérica do problema da inteligência artificial. @mori2003recognizing apresentam uma solução rudimentar para o problema a partir de cortes em imagens. O modelo final acerta somente 33% dos casos. @yan2008low criam um modelo de quebrar CAPTCHAs baseado em diversas heurísticas. @yan2008usability apresentam os principais problemas de utilização no desenvolvimento de CAPTCHAs concluindo, principalmente, que CAPTCHAs baseados em textos podem sim ser desafios complexos. @golle2008machine utilizam máquinas de vetor de suporte pela primeira vez. @motoyama2010re estudam o aspecto econômico dos reCaptchas, avaliando o impacto de sua utilização ampla em toda a internet. @bursztein2011text testam diversos modelos em 15 captchas diferentes e concluem que a melhor forma de criar CAPTCHAs complicados é colando as letras. @bursztein2014end mostram pela primeira vez um modelo um modelo de aprendizado por reforço, utilizando feedbacks humanos. @george2017generative desenvolvem um novo modelo capaz de quebrar CAPTCHAs a partir de pouquíssimos exemplos.

@@ -2,7 +2,7 @@
 
 O problema do Captcha pode ser entendido como um problema de classificação de imagens. Especificamente, nosso interesse é criar uma função $g$ que recebe uma imagem $\mathbf X = \{x_{nmr} \in [0,1]\}_{N\times M \times R}$ e retorna um vetor de índices $\mathbf y$, sendo que cada índice $y_j$ corresponde a um caractere $c_j$, $j = 1, \dots, L$, onde $L$ é o número de caracteres contidos na imagem. Chamaremos $L$ de *comprimento* do Captcha.
 
-Das afirmações anteriores podemos tirar três conclusões.
+Podemos detalhar as afirmações anteriores em três itens, listados abaixo.
 
 1. Nossa variável **explicativa**, a imagem, é uma matriz $\mathbf X = \{x_{ijk}\}_{N\times M \times R}$, em que $N$ é o número de linhas, $M$ é o número de colunas e $R$ é o número de *cores*, ou *canais*. 
 
@@ -14,10 +14,10 @@ O elemento $x_{nm\cdot}$ é denominado *pixel*. Um pixel representa a menor unid
 
 3. Nossa **resposta** $\mathbf y \in \mathbb \{1, \dots, |\mathcal A|\}^L$ é um vetor de índices de tamanho fixo. Cada elemento de $\mathbf y$ representa um valor do alfabeto $\mathcal A$.
 
-A construção de uma função $g$ capaz de mapear $\mathbf y$ a partir de uma nova imagem $\mathbf X$ depende de uma amostra de imagens $\mathbf X_1, \dots, \mathbf X_S$ corretamente classificadas por $\mathbf y_1, \dots, \mathbf y_S$. A tarefa é, portanto, estimar uma função $\hat g$ com o objetivo de minimizar.
+A construção de uma função $g$ capaz de mapear $\mathbf y$ a partir de uma nova imagem $\mathbf X$ depende de uma amostra de imagens $\mathbf X_1, \dots, \mathbf X_S$ corretamente classificadas por $\mathbf y_1, \dots, \mathbf y_S$. A tarefa é, portanto, obter uma estimativa $\hat g$ para a função $g$ que minimiza
 
 $$
-L(g(\mathbf X), \mathbf y) = \mathbb I(g(\mathbf X) \neq \mathbf y)
+L(\hat g(\mathbf X), \mathbf y) = \mathbb I(g(\mathbf X) \neq \mathbf y)
 $$
 
 em que $\mathbb I$ é a função indicadora.
@@ -26,11 +26,11 @@ em que $\mathbb I$ é a função indicadora.
 
 ### Áudio
 
-Captchas também podem se manifestar na forma de áudio. Nesses casos, o usuário é condicionado a ouvir um áudio e transcrever seu conteúdo em um texto.
+Captchas também ser encontrados na forma de áudio. Nesses casos, o usuário é condicionado a ouvir um áudio e transcrever seu conteúdo em um texto.
 
 Com base nos Captchas analisados durante o desenvolvimento do trabalho, verificamos que Captchas de áudio são menos complexos. Por exemplo, alguns destes são formados por sons sem ruído. Ou seja, uma tabela de sons e classificações seria suficiente para quebrar os Captchas.
 
-Nos casos com ruído, podemos utilizar duas técnicas para quebrar Captchas de áudio. A primeira é baseada em engenharia de características [ref], que extrai covariáveis dos áudios, para serem utilizados posteriormente em um modelo de regressão clássico. O segundo método consiste em calcular o espectrograma do áudio e tratá-lo como um Captcha de imagem.
+Nos casos com ruído, podemos utilizar duas técnicas para quebrar Captchas de áudio. A primeira é baseada em engenharia de características [ref], que extrai covariáveis dos áudios, para serem utilizadas posteriormente em um modelo de regressão clássico. O segundo método consiste em calcular o espectrograma do áudio e tratá-lo como um Captcha de imagem.
 
 ### Covariáveis e número de respostas variável
 
@@ -38,7 +38,7 @@ Outra forma comum de manifestação de Captchas são imagens em que o número de
 
 Assumindo que o número de letras máximo que aparece numa imagem é fixo, uma solução para o problema de tamanho variável é considerar um caractere adicional `_` no alfabeto, chamado *placeholder*, que representa a ausência do caractere em determinada posição. Assim, uma imagem com $L_{\max} = 5$, por exemplo, poderia ter uma classificação `cad5_`, que tem apenas quatro letras.
 
-O problema dessa proposta é que a posição dos *placeholders* não importa na classificação do captcha. Ou seja, as soluções `cad5_`, `ca_d5` e `_cad5` são  equivalentes. Isso torna o problema mais difícil de controlar.
+O problema dessa proposta é que a posição dos *placeholders* não importa na classificação do captcha. Ou seja, as soluções `cad5_`, `ca_d5` e `_cad5` são  equivalentes. Isso aumenta a dificuldade na estimação dos parâmetros por gerar mais ótimos locais.
 
 Outra alternativa para o problema é considerar que um de nossos interesses de predição é justamente o número de letras. Assim, teríamos 
 
@@ -53,3 +53,4 @@ Usualmente, o problema de Captchas de tamanho variável é acompanhado pelo prob
 Inicialmente, pode parecer contra intuitivo considerar uma imagem e um texto como covariáveis para predizer o valor de $\mathbf y$, mas isso se dá de forma natural, principalmente na solução que proposta no Capítulo \@ref{results}.
 
 ### reCaptcha
+

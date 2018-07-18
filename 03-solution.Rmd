@@ -1,23 +1,5 @@
 # Solução
 
-[@von2002telling] define captchas pela primeira vez
-
-[@von2003captcha] define um problema de resolver captcha como um problema de inteligência artificial.
-
-[@mori2003recognizing] apresenta uma solução rudimentar para o problema a partir de cortes em imagens. O modelo final acerta somente 33% dos casos.
-
-[@yan2008low] criam um modelo de quebrar captcha baseado em diversas heurísticas.
-
-[@yan2008usability] usability issues in CAPTCHA design
-
-[@golle2008machine] utilizam SVM
-
-[@motoyama2010re] estudam o aspecto economico dos recaptchas
-
-[@bursztein2011text] testam varios modelos em 15 captchas diferentes
-
-[@bursztein2014end] mostram um modelo de reinforcement
-
 ## Segmentação e classificação
 
 Um problema de resolver o CAPTCHA diretamente é que a variável resposta $\mathbf y$ tem um número exponencial de combinações. Na formulação do capítulo anterior, nossa resposta é uma palavra de $L$ caracteres, sendo que cada caractere $c_j$ pode ter $|\mathcal A|$ valores. Nessa construção, o total de combinações é $|\mathcal A|^L$.
@@ -49,7 +31,7 @@ arq_captcha  %>%
   plot()
 ```
 
-Nesse caso, é podemos resolver o problema da segmentação realizando cortes fixos na imagem. Podemos também limitar os eixos `x`, tirando os espaços vazios à esquerda e à direita e `y`, removendo espaços superiores e inferiores. Por último, transformamos a imagem em escala de cinza. O resultado dessas operações de pré-processamento estão na Figura \@ref(fig:tjmg2).
+Nesse caso, podemos resolver o problema da segmentação realizando cortes fixos na imagem. Podemos também limitar os eixos `x`, tirando os espaços vazios à esquerda e à direita e `y`, removendo espaços superiores e inferiores. Por último, transformamos a imagem em escala de cinza. O resultado dessas operações de pré-processamento estão na Figura \@ref(fig:tjmg2).
 
 ```{r tjmg2, fig.height=1.5, fig.width=4, fig.cap='CAPTCHA do TJMG após segmentação.', echo=TRUE}
 op <- graphics::par(mar = rep(0, 4))
@@ -89,7 +71,7 @@ arq_captcha %>%
 
 Agora basta rodar o mesmo para toda a base de treino e rodar um modelo. Nesse exemplo, utilizamos uma base de 1500 CAPTCHAs classificados. O resultado após o pré-processamento é uma base com 7500 linhas e 520 colunas. Escolhemos manter 6000 linhas para treino e as 1500 restantes para teste. Utilizamos um modelo de florestas aleatórias para o exemplo [@breiman2001random].
 
-```{r carregabd, message=FALSE, warning=FALSE, eval=TRUE, echo=FALSE}
+```{r carregabd, message=FALSE, warning=FALSE, eval=FALSE, echo=FALSE}
 dados <- readRDS('data/dados_segment.rds') %>% dplyr::mutate(y = factor(y))
 # monta bases de treino e teste
 set.seed(4747) # reprodutibilidade
@@ -101,7 +83,7 @@ model_rf <- randomForest::randomForest(y ~ . - captcha_id, data = d_train)
 
 O resultado do modelo pode ser verificado na Tabela \@ref(tab:errosTJMG), que mostra os observados *versus* preditos na base de teste. O acerto foi de 99.6% em cada caractere. Assumindo que o erro não depende da posição do caractere no CAPTCHA, o acerto para a imagem completa é de aproximadamente 98%.
 
-```{r errosTJMG, eval=TRUE, echo=FALSE}
+```{r errosTJMG, eval=FALSE, echo=FALSE}
 d_test %>% 
   dplyr::mutate(pred = predict(model_rf, newdata = .)) %>% 
   dplyr::count(y, pred) %>% 
@@ -259,11 +241,11 @@ Existem diversas formas de definir, desenhar e apresentar os conceitos básicos 
 
 ### A operação de convolução
 
-Convolução em imagens é uma operação usada há muito tempo nas áreas de *visão computacional* e *processamento de sinais*. Ela geralmente é utilizada para detectar padrões e aplicar filtros em imagens. Basicamente, o que ela faz é calcular um novo valor para um pixel da imagem com base nos pixels da vizinhança. Por exemplo, você pode fazer com que o pixel $(i,j)$ da sua imagem seja atualizado pela soma ponderada dos valores dos pixels na vizinhança.
+Convolução em imagens é uma operação usada nas áreas de *visão computacional* e *processamento de sinais*. Ela é utilizada para detectar padrões e aplicar filtros em imagens. Na prática, o que ela faz é calcular um novo valor para um pixel na posição $(i,j)$ de uma imagem com base nos valores dos pixels da vizinhança.
 
-Uma forma esperta de fazer essa soma ponderada é criando uma matriz de pesos: dessa forma, você não precisa ficar procurando os pontos da vizinhança. Para cada ponto $(i,j)$, você pega o subset da matriz de vizinhança, multiplica pontualmente pela matriz de pesos e soma todos os valores. Isso é *exatamente* o que a convolução faz.
+Uma forma esperta de fazer essa soma ponderada é criando uma matriz de pesos. Com ela, não é necessário procurar os pontos da vizinhança. Para cada ponto $(i,j)$, obtemos a matriz de vizinhança, multiplicamos pontualmente pela matriz de pesos e somamos os valores resultantes. Chamaremos essa matriz de pesos de **kernel**.
 
-Daqui em diante, chamaremos essa matriz de pesos de **kernel**. Considere esse exemplo 3x3:
+Considere esse exemplo 3x3:
 
 ```{r, echo=TRUE, eval=FALSE}
 kern_horizontal <- rbind(c(-1,-1,-1),
@@ -272,7 +254,7 @@ kern_horizontal <- rbind(c(-1,-1,-1),
 kern_horizontal
 ```
 
-E considere essa imagem super complexa:
+E considere a seguinte imagem:
 
 ```{r, out.width="30%", echo=TRUE, no.mar=TRUE, eval=FALSE}
 "imgs/emoji3.png" %>% 
@@ -280,7 +262,7 @@ E considere essa imagem super complexa:
   plot()
 ```
 
-Na prática, essa imagem é isso aqui (tirei algumas linhas e colunas):
+A imagem é construída a partir dessa matriz:
 
 ```{r, echo=TRUE, eval=FALSE}
 emoji <- decryptr:::load_image("imgs/emoji3.png")[,,1] 
@@ -293,20 +275,24 @@ Tome por exemplo o ponto $(i,j) = (12,16)$. A vizinhança 3x3 em torno desse pon
 emoji[12 + (-1):1, 16 + (-1):1]
 ```
 
-```{r, eval=FALSE}
-kern_horizontal
-```
+A operação de convolução é feita da seguinte forma:
 
-A operação de convolução é feita da seguinte forma: 
+$$
+\begin{aligned}
+p^{\text{new}}_{12,16} 
+&= k_{1,1}p_{11,15} + k_{1,2}p_{11,16} + k_{1,3}p_{11,17} + \\
+&+ k_{2,1}p_{12,15} + k_{2,2}p_{12,16} + k_{2,3}p_{12,17} + \\
+&+ k_{3,1}p_{13,15} + k_{3,2}p_{13,16} + k_{3,3}p_{13,17}
+\end{aligned}
+$$
 
 ```{r, echo=TRUE, eval=FALSE}
 sum(emoji[12 + (-1):1, 16 + (-1):1] * kern_horizontal)
 ```
 
-Pronto, esse é o valor a ser colocado no ponto $(i,j)$. Fazemos isso para todos os outros pontos. Algumas dúvidas que podem rolar nesse ponto:
+Esse é o valor a ser colocado no ponto $(i,j)$. Isso funciona em todos os pontos que não estão na borda da imagem.
 
-
-Com base nisso, montamos um algoritmo que faz a conta para todos os pixels, já criando uma borda na imagem:
+Existem duas formas de trabalhar com as bordas da imagem. A primeira é preenchendo as bordas com zeros, de forma a considerar apenas os pontos da imagem. A segunda é descartar os pontos da borda e retornar uma imagem menor, contendo somente os pixels em que foi possível aplicar todo o kernel.
 
 ```{r, echo=TRUE, eval=FALSE}
 convolve <- function(img, kern) {
@@ -326,17 +312,15 @@ convolve <- function(img, kern) {
 }
 ```
 
-Voltando para nossa imagem agora. No nosso caso, o resultado fica assim:
+No nosso caso, o resultado da convolução fica como na Figura \@ref(fig:xxx). Essa matriz não foi escolhida por acaso. Ela serve para destacar padrões horizontais da imagem. Como a primeira linha é formada `-1`s e a última é formada por `1`s, a matriz fica com valor alto se a parte de cima do pixel for preta e a parte de baixo for branca (`grande * 1 + pequeno * (-1)`). A parte destacada da imagem acabou sendo os olhos (pois temos maior concentração de pixels pretos ali), além das extremidades superior e inferior do rosto.
 
-```{r, no.mar=TRUE, out.width="30%", echo=TRUE, eval=FALSE}
+```{r xxx, no.mar=TRUE, out.width="30%", echo=TRUE, eval=FALSE}
 "imgs/emoji3.png" %>% 
   decryptr:::load_image() %>% 
   convolve(kern_horizontal) %>% 
   magick::image_read() %>% 
   plot()
 ```
-
-Ficou um pouco assustador, não? Essa matriz não foi escolhida por acaso. Ela serve para destacar padrões horizontais da imagem. Como a primeira linha é formada `-1`s e a última é formada por `1`s, a matriz fica com valor alto se a parte de cima do pixel for preta e a parte de baixo for branca (`grande * 1 + pequeno * (-1)`). A parte destacada da imagem acabou sendo os olhos (pois temos maior concentração de pixels pretos ali), além das extremidades superior e inferior do rosto.
 
 Com esse kernel aqui (vertical), a parte destacada do rosto são as extremidades dos lados:
 
