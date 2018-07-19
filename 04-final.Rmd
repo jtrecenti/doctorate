@@ -16,25 +16,30 @@ tibble::tribble(
   "Feedback", "Ensemble",
   "Reciclagem", "Ruído",
   "Enriquecimento", ""
-) %>% knitr::kable()
+) %>% knitr::kable(caption = "Possíveis soluções para problemas de eficiência e generalização.")
 ```
 
+A **reciclagem** consiste na aplicação de métodos de *data augmentation* usuais em processamento de imagens. Esses métodos consistem em gerar novas imagens a partir das imagens originais, mas adicionando rotações, reflexões e diferentes níveis de zoom. A vantagem da reciclagem é a possibilidade de aumentar a base de treino sem aumentar a quantidade de classificações manuais, o que em tese aumenta a eficiência do aprendizado do modelo.
 
+A aplicação de **ruídos** na imagem segue o mesmo princípio da reciclagem, mas tem foco na generalização. Ruídos podem ser adicionados através de distorções da imagem, ruídos aleatórios e oclusões. O ruído adiciona robustez nas predições, o que em tese possibilitaria que um modelo implementado para um CAPTCHA específico possa ser utilizado para um caso similar.
 
-### Feedback
+A utilização de técnicas de **ensemble** visa compartilhar os parâmetros de um modelo de CAPTCHA em outro modelo. A arquitetura moderna de redes neurais possibilita o encaixe de modelos pré-treinados em novas bases de treino. Por exemplo, é possível aproveitar as camadas de redes convolucionais do captcha RFB como inputs adicionais para modelo do TRT. Esses parâmetros podem ser considerados fixos ou podem entrar na verossimilhança do modelo e ser atualizado. Em tese, isso permitiria a criação de apenas um grande modelo para resolver todos os CAPTCHAs. 
 
-### Reciclagem
+O **enriquecimento** surge do fato de que origem de novos parâmetros a serem adicionados a um modelo não precisam ser de CAPTCHAs ajustados anteriormente. Esses parâmetros podem vir de ferramentas genéricas de reconhecimento de caracteres (OCR) ou mesmo de bases de dados de caracteres. @george2017generative realizaram essa investigação com resultados satisfatórios e conseguiram reduzir o tramanho da base de treino significativamente.
 
-### Ensemble
+Um mecanismo de **feedback** é uma técnica usada de aumentar a eficiência do modelo ao adicionar informações ao modelo quando a predição falha. As informações são incluídas no modelo através de técnicas de aprendizado por reforço [@sutton1998introduction].
 
-###
+Existem duas formas de implementar mecanismos de feedback: automática e manual.
 
-- Ensemble
-- Data augmentation / geradores
-- Tesseract
-- Feedback
-  - manual
-  - oráculo
+A forma automática aproveita as vantagens da existência de um *oráculo* de baixo custo para aumentar o tamanho da base de dados automaticamente. O oráculo é uma função que recebe uma imagem e uma predição e informa se a predição está correta ou incorreta. O oráculo tem custo baixo de utilização pois existe em praticamente todos os sites da internet, pois geralmente o CAPTCHA está associado a um formulário de consulta (e.g. uma consulta processual), que verifica se o CAPTCHA foi corretamente resolvido. O problema do oráculo é que, quando algoritmo erra, não sabemos quais são as letras que foram preditas incorretamente. Por exemplo, num caso com $L=6$ letras e $|\mathcal A|=35$, a informação que o oráculo passa quando o algoritmo erra é que o valor correto do CAPTCHA não é uma das $36^6$ possibilidades. Além disso, em muitos sites só é possível testar a predição do CAPTCHA uma vez. Isso sugere que a informação do oráculo deve ser aliada a heurísticas para que seja útil.
+
+A forma manual utiliza a análise de humanos para inclusão de informações sobre cortes da imagem e erro das letras [@bursztein2014end]. Uma pergunta de pesquisa interessante nesse sentido seria: qual é a mínima intervenção suficiente para fazer o modelo aprender? Isso pode ser resolvido testando diversos inputs manuais e comparar o tempo de realização do feedback com o ganho em poder preditivo.
+
+## Próximos passos
+
+Na tese de doutorado, vamos utilizar reciclagem, adição de ruídos, ensemble e enriquecimento para construir modelos mais eficientes e robustos. Pretendemos testar os impactos dessas técnicas na relação entre tamanho da base de treino e poder preditivo do modelo.
+
+O grande desafio da pesquisa será a investigar a forma automatizada de feedback. Caso seja possível evitar completamente o input humano para resolver os CAPTCHAs, o problema de aprendizado de CAPTCHAs baseados em texto estará completamente resolvido. Se não, vamos estudar quais são os limites da aplicação automatizada e buscar métodos que misturem eficientemente as duas formas de feedback.
 
 
 

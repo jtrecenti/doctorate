@@ -48,7 +48,7 @@ onde $l$ é o número de letras do Captcha específico e $\mathbf y$ tem comprim
 
 Usualmente, o problema de Captchas de tamanho variável é acompanhado pelo problema das covariáveis. Um tipo comum de Captcha com covariáveis são questões como "digite todas as letras da cor verde". Nesse caso, "verde" é uma covariável, pois é uma das informações que deve ser utilizada em conjunto com a imagem completa para predizr o texto do Captcha.
 
-Inicialmente, pode parecer contra intuitivo considerar uma imagem e um texto como covariáveis para predizer o valor de $\mathbf y$, mas isso se dá de forma natural, principalmente na solução que proposta no Capítulo \@ref{results}.
+Inicialmente, pode parecer contra intuitivo considerar uma imagem e um texto como covariáveis para predizer o valor de $\mathbf y$, mas isso se dá de forma natural, principalmente na solução que proposta no Capítulo \@ref(results).
 
 ### reCaptcha 2.0
 

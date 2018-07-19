@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Solução {#results}
 
 ## Segmentação e classificação
@@ -31,7 +36,7 @@ arq_captcha  %>%
 
 Nesse caso, podemos resolver o problema da segmentação realizando cortes fixos na imagem. Podemos também limitar os eixos `x`, tirando os espaços vazios à esquerda e à direita e `y`, removendo espaços superiores e inferiores. Por último, transformamos a imagem em escala de cinza. O resultado dessas operações de pré-processamento estão na Figura \@ref(fig:tjmg2).
 
-```{r tjmg2, fig.height=1.5, fig.width=4, fig.cap='CAPTCHA do TJMG após segmentação.', echo=TRUE}
+```{r tjmg2, fig.height=1.5, fig.width=4, fig.cap='CAPTCHA do TJMG após segmentação.', echo=FALSE}
 op <- graphics::par(mar = rep(0, 4))
 arq_captcha %>% 
   read_captcha() %>% 
@@ -46,7 +51,7 @@ abline(h = c(0, 26), col = 'blue')
 
 O resultado são cinco imagens de dimensões `26x20`, associadas a cada caractere. O próximo passo é transformar o banco de dados num formato tratável por modelos tradicionais de regressão. Para isso, colocamos cada pixel em uma coluna da nossa base de dados. No caso do TJMG, cada CAPTCHA gera uma tabela de 5 linhas e 520 (`26 * 20`) colunas. A Tabela \@ref(tab:imgsep) mostra as primeiras seis colunas dessa base. 
 
-```{r imgsep, echo=TRUE}
+```{r imgsep, echo=FALSE}
 arq_captcha %>% 
   read_captcha() %>% 
   dplyr::first() %>% 
@@ -70,7 +75,8 @@ arq_captcha %>%
 Agora basta rodar o mesmo para toda a base de treino e rodar um modelo. Nesse exemplo, utilizamos uma base de 1500 CAPTCHAs classificados. O resultado após o pré-processamento é uma base com 7500 linhas e 520 colunas. Escolhemos manter 6000 linhas para treino e as 1500 restantes para teste. Utilizamos um modelo de florestas aleatórias para o exemplo [@breiman2001random].
 
 ```{r carregabd, message=FALSE, warning=FALSE, eval=FALSE, echo=FALSE}
-dados <- readRDS('data/dados_segment.rds') %>% dplyr::mutate(y = factor(y))
+dados <- readRDS('data/dados_segment.rds') %>% 
+  dplyr::mutate(y = factor(y))
 # monta bases de treino e teste
 set.seed(4747) # reprodutibilidade
 ids_treino <- sample(seq_len(nrow(dados)), 6000, replace = FALSE)
@@ -81,7 +87,17 @@ model_rf <- randomForest::randomForest(y ~ . - captcha_id, data = d_train)
 
 O resultado do modelo pode ser verificado na Tabela \@ref(tab:errosTJMG), que mostra os observados *versus* preditos na base de teste. O acerto foi de 99.6% em cada caractere. Assumindo que o erro não depende da posição do caractere no CAPTCHA, o acerto para a imagem completa é de aproximadamente 98%.
 
-```{r errosTJMG, eval=FALSE, echo=FALSE}
+```{r errosTJMG, eval=TRUE, echo=FALSE}
+library(randomForest)
+dados <- readRDS('data/dados_segment.rds') %>% 
+  dplyr::mutate(y = factor(y))
+# monta bases de treino e teste
+set.seed(4747) # reprodutibilidade
+ids_treino <- sample(seq_len(nrow(dados)), 6000, replace = FALSE)
+d_train <- dados[ids_treino, ]
+d_test <- dados[-ids_treino, ]
+
+model_rf <- readRDS("data/model_rf.rds")
 d_test %>% 
   dplyr::mutate(pred = predict(model_rf, newdata = .)) %>% 
   dplyr::count(y, pred) %>% 
@@ -92,8 +108,8 @@ d_test %>%
 
 O resultado para o TJMG é bastante satisfatório, mas não generaliza para outros CAPTCHAs. Tome por exemplo o CAPTCHA da Receita Federal (RFB) da Figura \@ref(fig:generalize). Nesse caso, a posição dos caracteres muda significativamente de imagem para imagem, e assim fica difícil cortar em pedaços.
 
-```{r generalize, echo=FALSE, out.width = '12%', fig.cap="CAPTCHA Receita Federal", fig.align="center"}
-fs::dir_ls('imgs/captcha/rfb') %>% 
+```{r generalize, echo=FALSE, out.width = '32%', fig.cap="CAPTCHA Receita Federal", fig.align="center"}
+fs::dir_ls('imgs/captcha/rfb')[1] %>% 
   decryptr::read_captcha() %>% 
   purrr::walk(plot)
 ```
@@ -118,7 +134,9 @@ O modelo linear generalizado é composto por três elementos: componente aleató
 
 O componente aleatório é uma variável aleatória com distribuição pertencente à família exponencial, que dá origem à verossimilhança do modelo. O componente sistemático é uma combinação linear das variáveis preditoras com um vetor de parâmetros. A função de ligação é uma operação que leva a componente sistemática no valor esperado da componente aleatória. Uma forma comum de definir a ligação é propondo uma função com domínio nos números reais e contradomínio igual ao suporte do componente aleatório. Dessa forma, não é necessário impor restrições aos parâmetros da componente sistemática para que os valores ajustados variem na mesma faixa que o componente aletório.
 
-![](imgs/glm.png)
+```{r echo=FALSE, out.width="40%", fig.align="center"}
+knitr::include_graphics("imgs/glm.png")
+```
 
 No exemplo da regressão logística, o componente aleatório tem distribuição Bernoulli com média $\mu$. O componente sistemático é a combinação linear $\mathbf X \boldsymbol \beta$ e a função de ligação é a inversa de
 
@@ -126,7 +144,7 @@ $$
 g(\mu) = \log\left(\frac{\mu}{1-\mu}\right)
 $$
 
-A partir de uma amostra $y_1, \dots, \y_n$ e observando que $\mu_i = g^{-1}(\mathbf X_i\boldsymbol\beta)$, a verossimilhança do modelo é dada por
+A partir de uma amostra $y_1, \dots, y_n$ e observando que $\mu_i = g^{-1}(\mathbf X_i\boldsymbol\beta)$, a verossimilhança do modelo é dada por
 
 $$
 \mathcal L(\boldsymbol \beta|\mathbf y) = \prod_{i=1}^n f(y_i|\boldsymbol\beta) = \prod_{i=1}^n\mu_i^{y_i}(1-\mu_i)^{1-y_i}
@@ -155,12 +173,12 @@ $$
 É fácil ver que
 
 $$
-\begin{align}
+\begin{aligned}
 D(\mathbf y|{ \boldsymbol \beta}) &= \sum_{i=1}^n y_i\log(y_i) + (1-y_i)\log(1-y_i) - \sum_{i=1}^n y_i\log(\mu_i) + (1-y_i)\log(1-\mu_i) \\
 &=\sum_{i=1}^ny_i\log\left(\frac{y_i}{\mu_i}\right) + (1-y_i)\log\left(\frac{1-y_i}{1-\mu_i}\right) \\
 &= \sum_{i=1}^n D_{KL}(y_i||\mu_i) \\
 &= D_{KL}(\mathbf y||{\boldsymbol\mu}).
-\end{align}
+\end{aligned}
 $$
 
 Outra propriedade interessante é que o desvio identifica unicamente a verossimilhança do modelo. De fato, podemos reformular a definição do modelo linear generalizado a partir da especificação do desvio ou da divergência de Kullback-Leibler no lugar do componente aleatório. Essa propriedade será útil na comparação com redes neurais.
@@ -224,7 +242,7 @@ A literatura de redes neurais costuma trocar o nome função de ligação por *a
 
 Já a verossimilhança ou o desvio são substituídos por uma *função de perda*. A natureza probabilística do modelo é considerada indiretamente através da função desvio, como vimos anteriormente. No entanto, ao invés de trabalhar com o desvio, os pesquisadores de redes neurais definem genericamente uma função de perda que mensura uma discrepância entre os valores observados e estimados. Uma escolha razoável de função de perda é a própria divergência de Kullback-Leibler, calculada com base no suporte da variável resposta, gerando a função desvio. No entanto, dependendo da aplicação, podemos escolher outras perdas, que podem gerar distribuições de probabilidades sem formato analítico específico. 
 
-Por último, a aplicação de camadas de não-linearidades podem ser representadas através de um grafo direcionado acíclico. Essa representação é vantajosa por dois motivos. O primeiro é que a aplicação facilita a especificação e entendimento do modelo e seus parâmetros, que podem ficar com notação carregada na especificação por fórmulas matemáticas. A segunda é que é possível utilizar conhecimentos de teoria dos grafos para aumentar a eficiência dos algoritmos. Por exemplo, é possível aproveitar parte dos cálculos do *backpropagation* na obtenção das derivadas parciais da função de perda [@tensorflow].
+Por último, a aplicação de camadas de não-linearidades podem ser representadas através de um grafo direcionado acíclico. Essa representação é vantajosa por dois motivos. O primeiro é que a aplicação facilita a especificação e entendimento do modelo e seus parâmetros, que podem ficar com notação carregada na especificação por fórmulas matemáticas. A segunda é que é possível utilizar conhecimentos de teoria dos grafos para aumentar a eficiência dos algoritmos. Por exemplo, é possível aproveitar parte dos cálculos do *backpropagation* na obtenção das derivadas parciais da função de perda [@abadi2016tensorflow].
 
 Em resumo, podemos concluir que
 
@@ -242,13 +260,15 @@ Convolução em imagens é uma operação usada nas áreas de *visão computacio
 
 Uma forma organizada de fazer essa soma ponderada é criando uma matriz de pesos. Com ela, não é necessário procurar os pontos da vizinhança. Para cada ponto $(i,j)$, obtemos a matriz de vizinhança, multiplicamos pontualmente pela matriz de pesos e somamos os valores resultantes. Chamaremos essa matriz de pesos de **kernel**.
 
+Considere
+
 $$
 K = \left[\begin{array}{rrr}-1&-1&-1\\0&0&0\\1&1&1\end{array}\right]
 $$
 
-E considere a seguinte imagem:
+e a seguinte imagem:
 
-```{r, out.width="30%", echo=TRUE, no.mar=TRUE, eval=TRUE}
+```{r, out.width="30%", echo=FALSE, no.mar=TRUE, eval=TRUE, fig.align="center"}
 library(magrittr)
   "imgs/emoji3.png" %>% 
   magick::image_read() %>% 
@@ -283,7 +303,7 @@ Existem duas formas de trabalhar com as bordas da imagem. A primeira é preenche
 
 No nosso caso, o resultado da convolução fica como na Figura \@ref(fig:emoji-horiz). Essa matriz não foi escolhida por acaso. Ela serve para destacar padrões horizontais da imagem. Como a primeira linha é formada `-1`s e a última é formada por `1`s, a matriz fica com valor alto se a parte de cima do pixel for preta e a parte de baixo for branca (`grande * 1 + pequeno * (-1)`). A parte destacada da imagem acabou sendo os olhos (pois temos maior concentração de pixels pretos ali), além das extremidades superior e inferior do rosto.
 
-```{r emoji-horiz, no.mar=TRUE, out.width="30%", echo=FALSE, eval=TRUE}
+```{r emoji-horiz, no.mar=TRUE, out.width="30%", fig.cap="Figura após aplicação de convolução.", echo=FALSE, eval=TRUE, fig.align="center"}
 kern_horizontal <- matrix(c(-1,-1,-1,0,0,0,1,1,1), ncol = 3, byrow = TRUE)
 convolve <- function(img, kern) {
   # monta a bordinha na imagem. A borda deve ter (tamanho kernel) / 2,
@@ -316,12 +336,10 @@ $$
 
 a parte destacada do rosto são as extremidades dos lados:
 
-```{r, no.mar=TRUE, out.width="30%", echo=FALSE, eval=TRUE}
+```{r, no.mar=TRUE, out.width="30%", echo=FALSE, eval=TRUE, fig.align="center"}
 kern_vertical <- rbind(c(-1, 0, 1),
                        c(-1, 0, 1),
                        c(-1, 0, 1))
-kern_vertical
-
 "imgs/emoji3.png" %>% 
   decryptr:::load_image() %>% 
   convolve(kern_vertical) %>% 
@@ -333,7 +351,7 @@ A aplicação de convoluções em CAPTCHAs é direta. Nesse caso, vamos adiciona
 
 Vamos partir do CAPTCHA da RFB abaixo
 
-```{r, fig.height=1, fig.width=3.6, no.mar=TRUE, echo=FALSE, eval=TRUE}
+```{r, fig.height=1, fig.width=3.6, no.mar=TRUE, echo=FALSE, eval=TRUE, fig.align="center"}
 arq <- "imgs/captcha41367a06c5a.png"
 op <- graphics::par(mar = rep(0, 4))
 arq %>% 
@@ -349,7 +367,7 @@ add_bias <- function (x, b) x + b
 
 Esse é o resultado de adicionar o kernel vertical e bias de `0.6`.
 
-```{r, fig.height=1, fig.width=3.6, no.mar=TRUE, echo=FALSE, eval=TRUE}
+```{r, fig.height=1, fig.width=3.6, no.mar=TRUE, echo=FALSE, eval=TRUE, fig.align="center"}
 op <- graphics::par(mar = rep(0, 4))
 arq %>% 
   decryptr:::load_image() %>% 
@@ -361,7 +379,7 @@ arq %>%
 
 Em seguida observamos o kernel horizontal. Note que identificamos padrões das linhas horizontais que tentam atrapalhar a visão das letras.
 
-```{r, fig.height=1, fig.width=3.6, no.mar=TRUE, echo=TRUE, eval=FALSE}
+```{r, fig.height=1, fig.width=3.6, no.mar=TRUE, echo=FALSE, eval=FALSE, fig.align="center"}
 op <- graphics::par(mar = rep(0, 4))
 arq %>% 
   decryptr:::load_image() %>% 
@@ -386,7 +404,7 @@ Na prática, o que queremos é treinar os valores do kernel aplicado, buscando o
 Considere uma observação de uma imagem com 2x2 pixels abaixo. Note que se o interesse for utilizar essa matriz numa regressão logística, teríamos uma linha de nossa base de dados, com nove colunas. Ou seja, a regressão teria nove parâmetros associados.
 
 $$
-P = \left[\begin{array}{rr}
+P = \left[\begin{array}{rrr}
 p_{11} & p_{12} & p_{13} \\ 
 p_{21} & p_{22} & p_{23} \\
 p_{31} & p_{32} & p_{33}
@@ -438,11 +456,11 @@ Em resumo, as operações que realizamos na rede neural convolucional são
 
 ### Resultados
 
-Até o momento, aplicamos os modelos de redes neurais convolucionais para cinco CAPTCHAs distintos. Os resultados da aplicação dos modelos estão na Tabela \@ref(tab:resultados). Essas taxas foram calculadas com base em 100 novos CAPTCHAs baixados da internet após o ajuste do modelo. Podemos observar que as taxas de acerto são todas muito próximas de 100%. No mínimo essas taxas estão muito próximas do que seres humanos conseguiriam acertar.
+Até o momento, aplicamos os modelos de redes neurais convolucionais para cinco CAPTCHAs distintos. Os modelos foram treinados a partir de bases de treino com aproximadamente dez mil exemplos para cada CAPTCHA. Os resultados da aplicação dos modelos estão na Tabela \@ref(tab:resultados). Essas taxas foram calculadas com base em 100 novos CAPTCHAs baixados da internet após o ajuste do modelo. Podemos observar que as taxas de acerto são todas muito próximas de 100%. No mínimo essas taxas estão muito próximas do que seres humanos conseguiriam acertar.
 
 ```{r resultados}
 tibble::tibble(
-  Imagem = c("![](imgs/rfb.png)", 
+  Imagem = c(knitr::include_graphics("imgs/rfb.png"), 
              "![](imgs/trt.png)", 
              "![](imgs/tjmg.jpeg)", 
              "![](imgs/rsc.png)",

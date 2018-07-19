@@ -1,5 +1,5 @@
 ---
-title: "Quebrando CAPTCHAs"
+title: "Resolvendo CAPTCHAs"
 author: "Julio Trecenti"
 date: "`r format(Sys.Date(), '%d de %B de %Y')`"
 knit: "bookdown::render_book"
@@ -28,6 +28,4 @@ knitr::opts_chunk$set(echo = FALSE,
 ```{r echo=FALSE}
 library(tidyverse)
 ```
-
-# Introduction
 
