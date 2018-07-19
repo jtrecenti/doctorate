@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="references.html">
-<link rel="next" href="captchas-em-audio.html">
+<link rel="prev" href="results.html">
+<link rel="next" href="references.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -153,17 +153,70 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="pacote-decryptr" class="section level1">
-<h1><span class="header-section-number">Capítulo 6</span> Pacote decryptr</h1>
+<div id="eficiencia-e-generalizacao" class="section level1">
+<h1><span class="header-section-number">Capítulo 5</span> Eficiência e generalização</h1>
+<p>A modelagem via redes neurais convolucionais apresenta resultados satisfatórios, mas tem dois problemas: eficiência e generalização.</p>
+<p>O problema de eficiência está relacionado com o fato de que a quantidade de imagens classificadas necessária para obter bom poder preditivo é alta. A partir de nossos testes, identificamos que são necessários em torno de dez mil imagens classificadas para obter um modelo com taxa de acerto maior que 90%.</p>
+<p>Já o problema de generalização implica que um modelo ajustado para um tipo CAPTCHA não funciona para outro, ainda que esses tipos sejam muito similares. Na verdade, esses modelos sofrem do problema de <em>aprender</em> versus <em>decorar</em> <span class="citation">(Zhang et al. <a href="#ref-zhang2016understanding">2016</a>)</span>. Isso significa que pequenas modificações na imagem original, e.g. inclusão de ruído gaussiano na imagem, podem resultar em predições completamente diferentes.</p>
+<p>Os dois problemas não são independentes. Se criarmos um modelo que generaliza, é razoável afirmar que a quantidade de dados necessária para se obter bom poder preditivo numa nova imagem se reduz.</p>
+<p>A Tabela <a href="#tab:solucoes"><strong>??</strong></a> mostra algumas possíveis abordagens para resolver esses problemas.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Eficiência</th>
+<th align="left">Generalização</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Feedback</td>
+<td align="left">Ensemble</td>
+</tr>
+<tr class="even">
+<td align="left">Reciclagem</td>
+<td align="left">Ruído</td>
+</tr>
+<tr class="odd">
+<td align="left">Enriquecimento</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<div id="feedback" class="section level3">
+<h3><span class="header-section-number">5.0.1</span> Feedback</h3>
+</div>
+<div id="reciclagem" class="section level3">
+<h3><span class="header-section-number">5.0.2</span> Reciclagem</h3>
+</div>
+<div id="ensemble" class="section level3">
+<h3><span class="header-section-number">5.0.3</span> Ensemble</h3>
+</div>
+<div id="section" class="section level3">
+<h3><span class="header-section-number">5.0.4</span> </h3>
+<ul>
+<li>Ensemble</li>
+<li>Data augmentation / geradores</li>
+<li>Tesseract</li>
+<li>Feedback</li>
+<li>manual</li>
+<li>oráculo</li>
+</ul>
 
+</div>
+</div>
+<h3> CAPTCHAs em áudio</h3>
+<div id="refs" class="references">
+<div id="ref-zhang2016understanding">
+<p>Zhang, Chiyuan, Samy Bengio, Moritz Hardt, Benjamin Recht, and Oriol Vinyals. 2016. “Understanding Deep Learning Requires Rethinking Generalization.” <em>arXiv Preprint arXiv:1611.03530</em>.</p>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="references.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="captchas-em-audio.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="results.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -193,7 +246,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/yihui/bookdown-crc/edit/master/ap01-decryptr.Rmd",
+"link": "https://github.com/yihui/bookdown-crc/edit/master/04-final.Rmd",
 "text": "Edit"
 },
 "download": ["jtrecenti_doctorate_captcha.pdf", "jtrecenti_doctorate_captcha.epub"],

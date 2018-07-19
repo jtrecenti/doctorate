@@ -1,0 +1,40 @@
+# Eficiência e generalização
+
+A modelagem via redes neurais convolucionais apresenta resultados satisfatórios, mas tem dois problemas: eficiência e generalização. 
+
+O problema de eficiência está relacionado com o fato de que a quantidade de imagens classificadas necessária para obter bom poder preditivo é alta. A partir de nossos testes, identificamos que são necessários em torno de dez mil imagens classificadas para obter um modelo com taxa de acerto maior que 90%.
+
+Já o problema de generalização implica que um modelo ajustado para um tipo CAPTCHA não funciona para outro, ainda que esses tipos sejam muito similares. Na verdade, esses modelos sofrem do problema de *aprender* versus *decorar* [@zhang2016understanding]. Isso significa que pequenas modificações na imagem original, e.g. inclusão de ruído gaussiano na imagem, podem resultar em predições completamente diferentes.
+
+Os dois problemas não são independentes. Se criarmos um modelo que generaliza, é razoável afirmar que a quantidade de dados necessária para se obter bom poder preditivo numa nova imagem se reduz. 
+
+A Tabela \@ref(tab:solucoes) mostra algumas possíveis abordagens para resolver esses problemas.  
+
+```{r solucoes, echo=FALSE}
+tibble::tribble(
+  ~Eficiência, ~Generalização,
+  "Feedback", "Ensemble",
+  "Reciclagem", "Ruído",
+  "Enriquecimento", ""
+) %>% knitr::kable()
+```
+
+
+
+### Feedback
+
+### Reciclagem
+
+### Ensemble
+
+###
+
+- Ensemble
+- Data augmentation / geradores
+- Tesseract
+- Feedback
+  - manual
+  - oráculo
+
+
+

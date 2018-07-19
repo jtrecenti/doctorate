@@ -8,8 +8,6 @@ Podemos detalhar as afirmações anteriores em três itens, listados abaixo.
 
 O elemento $x_{nm\cdot}$ é denominado *pixel*. Um pixel representa a menor unidade possível da imagem. Em uma imagem colorida, por exemplo, temos $R=3$. Nesse caso, um pixel é um vetor de três dimensões com valores entre zero e um, representando a intensidade de vermelho, verde e azul da coordenada $n,m$ da imagem. Numa imagem em escala de cinza, temos $R=1$ e o pixel, de uma dimensão, representa a intensidade do cinza (com 1=branco e 0=preto).
 
-<desenho>
-
 2. O objeto $C \in \mathcal A^L$ é um vetor de itens de um alfabeto $\mathcal A$ com tamanho $|\mathcal A|$, finito e conhecido. Esse alfabeto contém todos os possíveis caracteres que podem aparecer na imagem.
 
 3. Nossa **resposta** $\mathbf y \in \mathbb \{1, \dots, |\mathcal A|\}^L$ é um vetor de índices de tamanho fixo. Cada elemento de $\mathbf y$ representa um valor do alfabeto $\mathcal A$.
@@ -52,5 +50,15 @@ Usualmente, o problema de Captchas de tamanho variável é acompanhado pelo prob
 
 Inicialmente, pode parecer contra intuitivo considerar uma imagem e um texto como covariáveis para predizer o valor de $\mathbf y$, mas isso se dá de forma natural, principalmente na solução que proposta no Capítulo \@ref{results}.
 
-### reCaptcha
+### reCaptcha 2.0
+
+O reCaptcha 2.0 desenvolvido pela Google é o *benchmark* no que se refere a geração de CAPTCHAs. Nesse desafio, o usuário é colocado para resolver diversos tipos de problemas de imagens como reconhecimento de placas de trânsito, fachadas de prédios e carros. O reCaptcha é utilizado não só para barrar robôs, como também para alimentar os modelos estatísticos da própria Google para seus produtos, como, por exemplo, os carros autônomos.
+
+A dificuldade em resolver esses desafios consiste na pluralidade de contextos, não na dificuldade dos desafios [@goodfellow2013multi]. A tarefa de identificar placas de trânsito em imagens é complicada, mas pode ser resolvida com alta taxa de acurácia utilizando-se modelos adequados. No entanto, o reCaptcha pode facilmente mudar a tarefa para identificação de fachadas, ou então identificação de felinos. Do ponto de vista estatístico, cada uma dessas tarefas exige uma base de dados diferente. 
+
+Na prática, o reCaptcha cria um jogo em que o autor do CAPTCHA tem muitas vantagens. O tempo necessário para criar uma nova tarefa é menor que o tempo necessário para resolvê-lo. Até hoje não existe uma solução geral para o reCaptcha 2.0 com taxas satisfatórias de acurácia.
+
+A principal forma de resolver o reCaptcha 2.0 é através da exploração de falhas no sistema de intificação de robôs ou a possibilidade de receber tarefas por áudio [sivakorn2016m]. Outras abordagens utilizam modelos robustos como o ImageNet para identificação genérica de objetos nas imagens, mas sem taxas de sucesso expressivas [mach2017automaticky].
+
+
 
