@@ -481,7 +481,7 @@ k_{21} &amp; k_{22} &amp; k_{23} \\
 k_{31} &amp; k_{32} &amp; k_{33}
 \end{array}\right]
 \]</span></p>
-<p>A operação convolução resulta numa nova matriz 3x3, em que cada elemento é uma combinação linear de elementos de <span class="math inline">\(P\)</span> e <span class="math inline">\(K\)</span>. De fato, é possível mostrar que o resultado da convolução é o resultado de uma multiplicação de matrizes obtida através da <em>matriz circulante</em> de <span class="math inline">\(K\)</span> <span class="citation">(Gray and others <a href="#ref-gray2006toeplitz">2006</a>)</span>. Ou seja, nesse caso, estamos fazendo uma nova regressão logística, mas com os valores dos dados modificados.</p>
+<p>A operação convolução resulta numa nova matriz 3x3, em que cada elemento é uma combinação linear de elementos de <span class="math inline">\(P\)</span> e <span class="math inline">\(K\)</span>. De fato, é possível mostrar que o resultado da convolução é o resultado de uma multiplicação de matrizes obtida através da <em>matriz circulante</em> de <span class="math inline">\(K\)</span> <span class="citation">(<span class="citeproc-not-found" data-reference-id="gray2006toeplitz"><strong>???</strong></span>)</span>. Ou seja, nesse caso, estamos fazendo uma nova regressão logística, mas com os valores dos dados modificados.</p>
 <p>Se, ao invés disso, considerarmos a matriz 2x2,</p>
 <p><span class="math display">\[
 K = \left[\begin{array}{rr}
@@ -490,7 +490,7 @@ k_{21} &amp; k_{22}
 \end{array}\right]
 \]</span></p>
 <p>estamos na prática reduzindo o problema de regressão logística para apenas quatro parâmetros.</p>
-<p>O modelo força-bruta é uma adaptação do clássico modelo LeNet-5 <span class="citation">(LeCun and others <a href="#ref-lecun2015lenet">2015</a>)</span>. Esse modelo aplica convolução 3 vezes consecutivas, adicionando o viés e a função ReLu em cada nível. Após cada convolução, também aplicamos uma operação chamada <em>max pooling</em>, que reduz a resolução da imagem, tomando o valor máximo da vizinhança de cada ponto. Após a aplicação das convoluções, as imagens são remodeladas no formato retangular padrão (uma linha por imagem) e aplicamos duas camadas de redes neurais comuns, como vimos anteriormente.</p>
+<p>O modelo força-bruta é uma adaptação do clássico modelo LeNet-5 <span class="citation">(<span class="citeproc-not-found" data-reference-id="lecun2015lenet"><strong>???</strong></span>)</span>. Esse modelo aplica convolução 3 vezes consecutivas, adicionando o viés e a função ReLu em cada nível. Após cada convolução, também aplicamos uma operação chamada <em>max pooling</em>, que reduz a resolução da imagem, tomando o valor máximo da vizinhança de cada ponto. Após a aplicação das convoluções, as imagens são remodeladas no formato retangular padrão (uma linha por imagem) e aplicamos duas camadas de redes neurais comuns, como vimos anteriormente.</p>
 <p>Após a realização de todas as operações, os números resultantes não estão entre zero e um. Por isso, aplicamos a ativação <em>softmax</em>, que é a generalização da ativação logística, mas para uma resposta com vários resultados possíveis</p>
 <p><span class="math display">\[
 softmax(x_i) = \frac{e^{x_i}}{\sum_ie^{x_i}}
@@ -558,12 +558,6 @@ softmax(x_i) = \frac{e^{x_i}}{\sum_ie^{x_i}}
 </div>
 <div id="ref-breiman2001random">
 <p>Breiman, Leo. 2001. “Random Forests.” <em>Machine Learning</em> 45 (1). Springer: 5–32.</p>
-</div>
-<div id="ref-gray2006toeplitz">
-<p>Gray, Robert M, and others. 2006. “Toeplitz and Circulant Matrices: A Review.” <em>Foundations and Trends in Communications and Information Theory</em> 2 (3). Now Publishers, Inc.: 155–239.</p>
-</div>
-<div id="ref-lecun2015lenet">
-<p>LeCun, Yann, and others. 2015. “LeNet-5, Convolutional Neural Networks.” <em>URL: Http://Yann. Lecun. Com/Exdb/Lenet</em>, 20.</p>
 </div>
 </div>
             </section>
