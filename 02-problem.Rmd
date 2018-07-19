@@ -1,64 +1,65 @@
 # Problema
 
-O problema do Captcha pode ser entendido como um problema de classificação de imagens. Especificamente, nosso interesse é criar uma função $g$ que recebe uma imagem $\mathbf X = \{x_{nmr} \in [0,1]\}_{N\times M \times R}$ e retorna um vetor de índices $\mathbf y$, sendo que cada índice $y_j$ corresponde a um caractere $c_j$, $j = 1, \dots, L$, onde $L$ é o número de caracteres contidos na imagem. Chamaremos $L$ de *comprimento* do Captcha.
+A decifragem de Captchas pode ser entendida como um problema de classificação de imagens. Especificamente, nosso interesse é criar uma função $g$ que recebe uma imagem $\mathbf X = \{x_{nmr} \in [0,1]\}_{N\times M \times R}$ e retorna um vetor de índices $\mathbf y$. Cada índice $y_j$ indica a presença de um caractere $c_j$, $j = 1, \dots, L$, onde $L$ é o número de caracteres contidos na imagem. Chamaremos $L$ de *comprimento* do Captcha, com $L \in  \mathbb{Z}_+$.
 
-Podemos detalhar as afirmações anteriores em três itens, listados abaixo.
+O problema pode ser detalhado em três itens, listados abaixo:
 
 1. Nossa variável **explicativa**, a imagem, é uma matriz $\mathbf X = \{x_{ijk}\}_{N\times M \times R}$, em que $N$ é o número de linhas, $M$ é o número de colunas e $R$ é o número de *cores*, ou *canais*. 
 
-O elemento $x_{nm\cdot}$ é denominado *pixel*. Um pixel representa a menor unidade possível da imagem. Em uma imagem colorida, por exemplo, temos $R=3$. Nesse caso, um pixel é um vetor de três dimensões com valores entre zero e um, representando a intensidade de vermelho, verde e azul da coordenada $n,m$ da imagem. Numa imagem em escala de cinza, temos $R=1$ e o pixel, de uma dimensão, representa a intensidade do cinza (com 1=branco e 0=preto).
+O elemento $x_{nm\cdot}$ é denominado *pixel*. Um pixel representa a menor unidade possível da imagem. Em uma imagem colorida, por exemplo, temos $R=3$. Nesse caso, um pixel é um vetor de três dimensões com valores entre zero e um, representando a intensidade de vermelho, verde e azul da coordenada $(n, m)$ da imagem. Numa imagem em escala de cinza, por exemplo, temos $R=1$ e o pixel, de uma dimensão, representa a intensidade do cinza, sendo 1 o equivalente da cor branca e 0 o preto.
 
-2. O objeto $C \in \mathcal A^L$ é um vetor de itens de um alfabeto $\mathcal A$ com tamanho $|\mathcal A|$, finito e conhecido. Esse alfabeto contém todos os possíveis caracteres que podem aparecer na imagem.
+2. O objeto $C \in \mathcal A^L$ é um vetor de itens de um alfabeto $\mathcal A$, de cardinalidade $|\mathcal A|$, finito e conhecido. Esse alfabeto contém todos os possíveis caracteres que podem aparecer na imagem.
 
-3. Nossa **resposta** $\mathbf y \in \mathbb \{1, \dots, |\mathcal A|\}^L$ é um vetor de índices de tamanho fixo. Cada elemento de $\mathbf y$ representa um valor do alfabeto $\mathcal A$.
+3. Nossa **resposta** $\mathbf y \in \mathbb \{1, \dots, |\mathcal A|\}^L$ é um vetor de índices de tamanho fixo. Cada elemento de $\mathbf y$ representa um elemento do alfabeto $\mathcal A$.
 
-A construção de uma função $g$ capaz de mapear $\mathbf y$ a partir de uma nova imagem $\mathbf X$ depende de uma amostra de imagens $\mathbf X_1, \dots, \mathbf X_S$ corretamente classificadas por $\mathbf y_1, \dots, \mathbf y_S$. A tarefa é, portanto, obter uma estimativa $\hat g$ para a função $g$ que minimiza
+A obtenção de uma função $g$ capaz de mapear $\mathbf y$ a partir de uma nova imagem $\mathbf X$ depende de uma amostra de imagens $\mathbf X_1, \dots, \mathbf X_S$, corretamente classificadas 
+através do vetor $\mathbf y_1, \dots, \mathbf y_S$. A tarefa é, portanto, obter uma estimativa $\hat g$ para a função $g$ que minimiza
 
 $$
 L(\hat g(\mathbf X), \mathbf y) = \mathbb I(g(\mathbf X) \neq \mathbf y)
 $$
 
-em que $\mathbb I$ é a função indicadora.
+em que $\mathbb I(g(\mathbf X) \neq \mathbf y)$ indica se $g(\mathbf X)$ difere 
+do que é observado em $\mathbf y$. Isto é, pretende-se encontrar uma função que minimize a taxa de classificação incorreta das imagens que descrevem os textos dos Captchas.  
 
 ## Variantes
 
 ### Áudio
 
-Captchas também ser encontrados na forma de áudio. Nesses casos, o usuário é condicionado a ouvir um áudio e transcrever seu conteúdo em um texto.
+Assim como em outros problemas, existem diversas formas de representação de dados.  
+Para os Captchas, também é possível encontrá-los em formato de áudio. Nestes casos, o usuário é condicionado a ouvir um áudio e transcrever o que foi entendido de seu conteúdo em um texto.  
 
-Com base nos Captchas analisados durante o desenvolvimento do trabalho, verificamos que Captchas de áudio são menos complexos. Por exemplo, alguns destes são formados por sons sem ruído. Ou seja, uma tabela de sons e classificações seria suficiente para quebrar os Captchas.
+É importante notar que este formato avalia uma competência diferente do usuário, em comparação às imagens. Com base na avaliação de Captchas de áudio durante o desenvolvimento do trabalho, verificou-se que estes são, em geral, menos complexos. Por exemplo, alguns Captchas neste formato são compostos por sons sem ruído, claramente entendíveis tanto por um ser humano quanto por uma máquina. Ou seja, caso se queira realizar a classificação automática destes Captchas, basta ter um conjunto de sons com seus respectivos significados. Dessa forma, um computador pode facilmente combinar os sons fornecidos com os correspondentes caracteres e obter a resposta para o desafio proposto, quebrando o Captcha. 
 
-Nos casos com ruído, podemos utilizar duas técnicas para quebrar Captchas de áudio. A primeira é baseada em engenharia de características [ref], que extrai covariáveis dos áudios, para serem utilizadas posteriormente em um modelo de regressão clássico. O segundo método consiste em calcular o espectrograma do áudio e tratá-lo como um Captcha de imagem.
+Para os casos aonde há presença de ruído no áudio, existem fundamentalmente duas técnicas para a quebra dos Captchas. A primeira é baseada em engenharia de características [ref], que consiste na extração de covariáveis referentes aos áudios, utilizadas posteriormente em um modelo de regressão clássico para a classificação. O segundo método trata de encontrar o espectrograma do áudio, possibilitando o tratamento dele como uma imagem, o que nos leva a algo parecido com o problema inicial.
 
 ### Covariáveis e número de respostas variável
 
-Outra forma comum de manifestação de Captchas são imagens em que o número de letras varia. Esse problema é mais complexo que o anterior pois a variável resposta não é mais um vetor de tamanho $L$ fixo.
+Outra forma comum de manifestação de Captchas são imagens em que o número de letras é variante. Esse problema é mais complexo que o anterior, uma vez que a variável resposta não é mais um vetor de tamanho $L$ fixo.
 
-Assumindo que o número de letras máximo que aparece numa imagem é fixo, uma solução para o problema de tamanho variável é considerar um caractere adicional `_` no alfabeto, chamado *placeholder*, que representa a ausência do caractere em determinada posição. Assim, uma imagem com $L_{\max} = 5$, por exemplo, poderia ter uma classificação `cad5_`, que tem apenas quatro letras.
+Porém, é possível assumir o número de letras máximo que aparece numa imagem como fixo. Dessa maneira, uma solução para o problema do tamanho variável é considerar um caractere adicional `_` no alfabeto, chamado *placeholder*, que representa a ausência do algum caractere em determinada posição. Este caractere tem a função de substituir as posições vazias, fazendo com que o comprimento destes Captchas seja também uniforme. Assim, uma imagem com $L_{\max} = 5$, por exemplo, pode ter uma classificação `cad5_`, que tem apenas quatro letras, mas foi completada até o número máximo de caracteres com o *placeholder*.
 
-O problema dessa proposta é que a posição dos *placeholders* não importa na classificação do captcha. Ou seja, as soluções `cad5_`, `ca_d5` e `_cad5` são  equivalentes. Isso aumenta a dificuldade na estimação dos parâmetros por gerar mais ótimos locais.
+Uma complicação dessa proposta é que a posição dos *placeholders* não importa na classificação do captcha. Em outras palavras, as soluções `cad5_`, `ca_d5` e `_cad5` são  equivalentes. Considerando a função de classificação a ser estimada, este obstáculo aumenta a dificuldade na estimação dos parâmetros por gerar mais ótimos locais, em detrimento de pontos ótimos globais.
 
-Outra alternativa para o problema é considerar que um de nossos interesses de predição é justamente o número de letras. Assim, teríamos 
+Ainda nesta situação, outra alternativa é considerar que um dos interesses de predição é justamente o número de letras. Assim, teríamos 
 
 $$
 \tilde{\mathbf{y}} = \left[l \;\; \mathbf y^\top \right]^\top,
 $$
 
-onde $l$ é o número de letras do Captcha específico e $\mathbf y$ tem comprimento $L_{\max}$, preenchido com *placeholders* como anteriormente. A presença do número de letras como componente da variável resposta do problema permite trabalhar adequadamente com os *placeholders*, pois podemos descartá-los na função de perda (verossimilhança) nos casos em que o número de letras estimadas for menor que $L_{\max}$.
+onde $l$ é o número de letras do Captcha específico e $\mathbf y$ tem comprimento $L_{\max}$, preenchido com *placeholders*, como anteriormente. A presença do número de letras como componente da variável resposta do problema permite trabalhar adequadamente com os *placeholders*, pois podemos descartá-los na função de perda (verossimilhança) nas vezes em que o número de letras estimadas for menor do que $L_{\max}$.
 
-Usualmente, o problema de Captchas de tamanho variável é acompanhado pelo problema das covariáveis. Um tipo comum de Captcha com covariáveis são questões como "digite todas as letras da cor verde". Nesse caso, "verde" é uma covariável, pois é uma das informações que deve ser utilizada em conjunto com a imagem completa para predizr o texto do Captcha.
+Usualmente, o problema de Captchas de tamanho variável é acompanhado pelo problema das covariáveis. Um tipo comum de Captcha com covariáveis envolve desafios como "digite todas as letras da cor verde". Nesse caso, "verde" é uma covariável, pois é uma das informações que deve ser utilizada em combinação com a imagem completa para a predição correta do texto do Captcha.
 
-Inicialmente, pode parecer contra intuitivo considerar uma imagem e um texto como covariáveis para predizer o valor de $\mathbf y$, mas isso se dá de forma natural, principalmente na solução que proposta no Capítulo \@ref(results).
+Inicialmente, pode parecer contra-intuitivo considerar uma imagem e um texto como covariáveis para predizer o valor de $\mathbf y$. Todavia, isso se dá de forma natural, principalmente na solução que proposta no Capítulo \@ref(results).
 
 ### reCaptcha 2.0
 
-O reCaptcha 2.0 desenvolvido pela Google é o *benchmark* no que se refere a geração de CAPTCHAs. Nesse desafio, o usuário é colocado para resolver diversos tipos de problemas de imagens como reconhecimento de placas de trânsito, fachadas de prédios e carros. O reCaptcha é utilizado não só para barrar robôs, como também para alimentar os modelos estatísticos da própria Google para seus produtos, como, por exemplo, os carros autônomos.
+O reCaptcha 2.0 desenvolvido pela Google é o *benchmark* no que se refere a geração de CAPTCHAs. Nesse desafio, o usuário é colocado para resolver diversos tipos de problemas de imagens como reconhecimento de placas de trânsito, fachadas de prédios e carros. O reCaptcha é utilizado não só para barrar robôs, como também para alimentar os modelos estatísticos da própria Google para seus produtos, como, por exemplo, o desenvolvimento de carros autônomos.
 
-A dificuldade em resolver esses desafios consiste na pluralidade de contextos, não na dificuldade dos desafios [@goodfellow2013multi]. A tarefa de identificar placas de trânsito em imagens é complicada, mas pode ser resolvida com alta taxa de acurácia utilizando-se modelos adequados. No entanto, o reCaptcha pode facilmente mudar a tarefa para identificação de fachadas, ou então identificação de felinos. Do ponto de vista estatístico, cada uma dessas tarefas exige uma base de dados diferente. 
+A dificuldade em resolver estes Captchas consiste na pluralidade de contextos, não na dificuldade que eles propõem [@goodfellow2013multi]. A tarefa de identificar placas de trânsito em imagens é complicada, mas pode ser resolvida com alta taxa de acurácia utilizando-se modelos adequados. No entanto, o reCaptcha pode facilmente mudar a tarefa para identificação de fachadas, ou então identificação de felinos. Do ponto de vista estatístico, cada uma dessas tarefas exige uma base de dados de treinamento diferente, aumentando exponecialmente a dificuldade de resolução. 
 
-Na prática, o reCaptcha cria um jogo em que o autor do CAPTCHA tem muitas vantagens. O tempo necessário para criar uma nova tarefa é menor que o tempo necessário para resolvê-lo. Até hoje não existe uma solução geral para o reCaptcha 2.0 com taxas satisfatórias de acurácia.
-
-A principal forma de resolver o reCaptcha 2.0 é através da exploração de falhas no sistema de intificação de robôs ou a possibilidade de receber tarefas por áudio [sivakorn2016m]. Outras abordagens utilizam modelos robustos como o ImageNet para identificação genérica de objetos nas imagens, mas sem taxas de sucesso expressivas [mach2017automaticky].
+Na prática, o reCaptcha cria um jogo em que o autor do CAPTCHA tem muitas vantagens. O tempo necessário para criar uma nova tarefa é menor que o tempo necessário para resolvê-lo. Até hoje não existe uma solução geral para o reCaptcha 2.0 com taxas satisfatórias de acurácia. A principal forma de contornar o reCaptcha 2.0 é através da exploração de falhas no sistema de identificação de robôs ou a possibilidade de receber tarefas por áudio [sivakorn2016m]. Outras abordagens utilizam modelos robustos, como o ImageNet, para detecção genérica de objetos nas imagens, mas sem taxas de sucesso expressivas [mach2017automaticky].
 
 
 
