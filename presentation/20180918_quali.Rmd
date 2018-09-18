@@ -88,8 +88,8 @@ Buscar formas eficientes e gerais de resolver CAPTCHAs de imagens com textos.
 1. Fazer uma ponte entre regressão logística e redes neurais.
 1. Implementar uma ferramenta para resolver CAPTCHAs.
 1. Discutir e testar diversas abordagens para aprimorar
-    - eficiência.
-    - generalização.
+    - eficiência: como resolver com uma base de treino menor.
+    - generalização: como usar um modelo para novos tipos de CAPTCHA.
 
 ---
 
@@ -104,8 +104,8 @@ Buscar formas eficientes e gerais de resolver CAPTCHAs de imagens com textos.
 1. **Fazer uma ponte entre regressão logística e redes neurais.**
 1. **Implementar uma ferramenta para resolver CAPTCHAs.**
 1. Discutir e testar diversas abordagens para aprimorar
-    - eficiência.
-    - generalização.
+    - eficiência: como resolver com uma base de treino menor.
+    - generalização: como usar um modelo para novos tipos de CAPTCHA.
 
 ---
 
@@ -146,11 +146,13 @@ O que queremos?
     - recebe uma imagem $\mathbf X = \{x_{nmr} \in [0,1]\}_{N\times M \times R}$ e 
     - retorna um vetor de índices $\mathbf y = \{y_j \in \mathbb N\}_{L \times 1}$. 
 
-- $y_j$ indica a presença de um caractere $c_j$, $j = 1, \dots, L$.
+- $c_j \in \mathcal A$, o alfabeto (e.g. letras e algarismos).
 
 - $L$ é o número de caracteres contidos na imagem (*comprimento* do CAPTCHA).
 
-- $c_j \in \mathcal A$, o alfabeto (e.g. letras e algarismos).
+- $y_j$ indica a presença de um caractere $c_j$, $j = 1, \dots, L$.
+
+
 
 ---
 
@@ -168,7 +170,7 @@ magick::image_read("captcha.png") %>%
   magick::image_write("captcha_small.png")
 ```
 
-- $X$: ![cap](captcha_small.png)
+- $X$: ![cap](captcha_small.png), 50x180x1 = 9000 valores
 
 - $L = 6$
 
@@ -213,7 +215,7 @@ A **resposta** $\mathbf y \in \mathbb \{1, \dots, |\mathcal A|\}^L$ é um vetor 
 - A tarefa é obter uma estimativa $\hat g$ para a função $g$ que minimiza
 
 $$
-R(g) = \mathbb E[\mathbb I(g(\mathbf X) \neq \mathbf Y)]
+R(g) = \mathbb E[\mathbb I(g(\mathbf X) \neq \mathbf Y)] = \mathbb P(g(\mathbf X) \neq \mathbf Y))
 $$
 
 para novas observações de $X$ e $Y$.
@@ -230,19 +232,21 @@ knitr::include_graphics("glm.png")
 
 # Exemplo: regressão logística
 
-$$Y_i|x \sim \text{Bernoulli}(\mu)$$
+Componente aleatório
+
+$$Y_i|x \sim \text{Bernoulli}(\mu_i)$$
 
 Componente sistemático
 
-$$\eta = \alpha + \sum_{j=1}^px_{ij}\beta_j$$
+$$\eta_i = \alpha + \sum_{j=1}^px_{ij}\beta_j$$
 
-Função se ligação
+Função de ligação
 
-$$g(\mu) = \log\left(\frac{\mu}{1-\mu}\right)$$
+$$g(\mu_i) = \log\left(\frac{\mu_i}{1-\mu_i}\right)$$
 
 Ligando os componentes
 
-$$\mu = g^{-1}(\eta) = \frac{1}{1+e^{-\eta}}$$
+$$\mu_i = g^{-1}(\eta_i) = \frac{1}{1+e^{-\eta_i}}$$
 
 ---
 
@@ -252,9 +256,9 @@ A log-verossimilhança é dada por
 
 $$l(\boldsymbol \beta|\mathbf y) = \sum_{i=1}^n y_i\log(\mu_i) + (1-y_i)\log(1-\mu_i)$$
 
-Uma forma útil de representar a verossimilhança é a partir da *função desvio*, dada por
+Uma forma útil de representar a log-verossimilhança é a partir da *função desvio*, dada por
 
-$$D(\mathbf y|\boldsymbol \beta) = l(\mathbf y|\mathbf y) - l(\boldsymbol \beta|\mathbf y),$$
+$$D(\mathbf y|\boldsymbol \beta) = l(\mathbf y|\mathbf y) - l(\boldsymbol \beta|\mathbf y)$$
 
 ---
 
@@ -275,11 +279,11 @@ D(\mathbf y|{ \boldsymbol \beta}) &= \sum_{i=1}^n y_i\log(y_i) + (1-y_i)\log(1-y
 
 # Rede neural
 
-- Componente aleatória: implica da divergência KL / Deviance.
+- Componente aleatório: é equivante à divergência KL / Deviance.
 
 --
 
-- Componente sistemática: viés e matriz de pesos. 
+- Componente sistemático: viés e matriz de pesos. 
 
 Com uma unidade de ativação:
 
@@ -305,13 +309,30 @@ $$Z^1 = g(W^1X^\top + b^1)$$
 
 --
 
-- Podemos usar $Z^1$ como uma nova matriz $X$, iteradamente
+- Podemos usar $Z^1$ como uma nova matriz $X$, iterativamente
 
 --
 
-- A forma usual de minimizar a deviance é diferente nos dois modelos.
-    - A regressão logística utiliza Newton-Raphson (segunda derivada)
-    - A rede neural utiliza descida de gradiente (primeira derivada)
+- A forma usual de minimizar a deviance é diferente nos dois modelos:
+
+
+- A regressão logística utiliza Newton-Raphson/Fisher Scoring (segunda derivada)
+
+$$\beta_{new} = \beta - \mathcal I_\beta^{-1}\mathcal U_\beta,$$
+
+onde 
+
+- $\mathcal U_\beta$ é o vetor escore (gradiente) e
+
+- $\mathcal I_\beta$ é a matriz de Informação (esperança da Hessiana).
+
+--
+
+- A rede neural utiliza descida de gradiente (primeira derivada)
+
+$$\beta_{new}=\beta - \alpha\,\mathcal U_\beta$$
+
+mais: http://bit.ly/athos-menor-dl
 
 ---
 
@@ -343,9 +364,9 @@ A convolução de $X$ por $W$ no ponto $(12,16)$ é dada por
 
 $$\begin{aligned}
 (X_{12,16} *w )_{12,16}
-&= w_{1,1}p_{11,15} + w_{1,2}p_{11,16} + w_{1,3}p_{11,17} + \\
-&+ w_{2,1}p_{12,15} + w_{2,2}p_{12,16} + w_{2,3}p_{12,17} + \\
-&+ w_{3,1}p_{13,15} + w_{3,2}p_{13,16} + w_{3,3}p_{13,17}
+&= w_{1,1}x_{11,15} + w_{1,2}x_{11,16} + w_{1,3}x_{11,17} + \\
+&+ w_{2,1}x_{12,15} + w_{2,2}x_{12,16} + w_{2,3}x_{12,17} + \\
+&+ w_{3,1}x_{13,15} + w_{3,2}x_{13,16} + w_{3,3}x_{13,17}
 \end{aligned}$$
 
 --
@@ -356,9 +377,37 @@ $$\begin{aligned}
 
 # Resultados
 
-```{r, out.width="90%"}
-knitr::include_graphics("results.png")
+
+<table>
+<tr> <th>Imagem             </th> <th>Nome</th> <th>N</th>     <th>Taxa de acerto</th></tr>
+<tr> <td><img src='rfb.png'></td> <td>RFB</td>  <td>27000</td> <td>98%</td></tr>
+<tr> <td><img src='trt.png'></td> <td>TRT</td>  <td>410</td> <td>98%</td></tr>
+<tr> <td><img src='tjmg.jpeg'></td> <td>TJMG</td>  <td>10000</td> <td>100%</td></tr>
+<tr> <td><img src='rsc.png'></td> <td>RSC</td>  <td>11000</td> <td>99%</td></tr>
+<tr> <td><img src='cadesp.png'></td> <td>CADESP</td>  <td>10000</td> <td>98%</td></tr>
+</table>
+
+```{r eval=FALSE} 
+library(magrittr)
+tibble::tibble(
+  Imagem = c("<img src='rfb.png'></img>", 
+             "<img src='rfb.png'></img>", 
+             "<img src='rfb.png'></img>", 
+             "<img src='rfb.png'></img>",
+             "<img src='rfb.png'></img>"), 
+  Nome = c("RFB", "TRT", "TJMG", "RSC", "CADESP"), 
+  N = c(27000, 410, 10000, 11000, 10000),
+  `Taxa de acerto` = c("98%", "98%", "100%", "99%", "98%")
+) %>% pander::pander()
+  
+  
+  # knitr:::kable(caption = "Resultados da aplicação dos modelos.", format = "html")
 ```
+
+---
+class: inverse, middle
+
+# Problemas e próximos passos
 
 ---
 
@@ -370,9 +419,9 @@ Possíveis soluções para problemas de eficiência e generalização:
 library(magrittr)
 tibble::tribble(
   ~Eficiência, ~Generalização,
-  "Feedback", "Ensemble",
   "Reciclagem", "Ruído",
-  "Enriquecimento", ""
+  "Enriquecimento", "Ensemble",
+  "Feedback", ""
 ) %>% 
   knitr::kable(caption = "", 
                format = 'html')
@@ -384,15 +433,15 @@ tibble::tribble(
 
 --
 
-- **ruídos**: mesmo princípio da reciclagem, mas tem foco na generalização. 
-
---
-
-- **ensemble**: usar parâmetros ajustados de um modelo em outro. 
+- **ruído**: mesmo princípio da reciclagem, mas tem foco na generalização. 
 
 --
 
 - **enriquecimento**: Aproveitar ferramentas (OCR) e bases de caracteres. 
+
+--
+
+- **ensemble**: usar parâmetros ajustados de um modelo em outro. 
 
 --
 
@@ -408,9 +457,14 @@ class: inverse
 - Rafael Stern
 - **Curso-R**: Athos, Caio, Daniel, Fernando, William
 
+
+<a href="https://curso-r.com">
+
 ```{r, out.width="20%"}
 knitr::include_graphics("logo-curso-2.png")
 ```
+
+</a>
 
 ---
 
@@ -426,6 +480,11 @@ knitr::include_graphics("logo-curso-2.png")
 
 - https://decryptr.netlify.com/
 
+
+<a href="https://github.com/decryptr">
+
 ```{r, out.width="20%"}
 knitr::include_graphics("22989908.jpeg")
 ```
+
+</a>

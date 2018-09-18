@@ -87,8 +87,8 @@ Buscar formas eficientes e gerais de resolver CAPTCHAs de imagens com textos.
 1. Fazer uma ponte entre regressão logística e redes neurais.
 1. Implementar uma ferramenta para resolver CAPTCHAs.
 1. Discutir e testar diversas abordagens para aprimorar
-    - eficiência.
-    - generalização.
+    - eficiência: como resolver com uma base de treino menor.
+    - generalização: como usar um modelo para novos tipos de CAPTCHA.
 
 ---
 
@@ -103,8 +103,8 @@ Buscar formas eficientes e gerais de resolver CAPTCHAs de imagens com textos.
 1. **Fazer uma ponte entre regressão logística e redes neurais.**
 1. **Implementar uma ferramenta para resolver CAPTCHAs.**
 1. Discutir e testar diversas abordagens para aprimorar
-    - eficiência.
-    - generalização.
+    - eficiência: como resolver com uma base de treino menor.
+    - generalização: como usar um modelo para novos tipos de CAPTCHA.
 
 ---
 
@@ -145,11 +145,13 @@ O que queremos?
     - recebe uma imagem `\(\mathbf X = \{x_{nmr} \in [0,1]\}_{N\times M \times R}\)` e 
     - retorna um vetor de índices `\(\mathbf y = \{y_j \in \mathbb N\}_{L \times 1}\)`. 
 
-- `\(y_j\)` indica a presença de um caractere `\(c_j\)`, `\(j = 1, \dots, L\)`.
+- `\(c_j \in \mathcal A\)`, o alfabeto (e.g. letras e algarismos).
 
 - `\(L\)` é o número de caracteres contidos na imagem (*comprimento* do CAPTCHA).
 
-- `\(c_j \in \mathcal A\)`, o alfabeto (e.g. letras e algarismos).
+- `\(y_j\)` indica a presença de um caractere `\(c_j\)`, `\(j = 1, \dots, L\)`.
+
+
 
 ---
 
@@ -161,7 +163,7 @@ O que queremos?
 
 
 
-- `\(X\)`: ![cap](captcha_small.png)
+- `\(X\)`: ![cap](captcha_small.png), 50x180x1 = 9000 valores
 
 - `\(L = 6\)`
 
@@ -207,7 +209,7 @@ A **resposta** `\(\mathbf y \in \mathbb \{1, \dots, |\mathcal A|\}^L\)` é um ve
 - A tarefa é obter uma estimativa `\(\hat g\)` para a função `\(g\)` que minimiza
 
 $$
-R(g) = \mathbb E[\mathbb I(g(\mathbf X) \neq \mathbf Y)]
+R(g) = \mathbb E[\mathbb I(g(\mathbf X) \neq \mathbf Y)] = \mathbb P(g(\mathbf X) \neq \mathbf Y))
 $$
 
 para novas observações de `\(X\)` e `\(Y\)`.
@@ -222,19 +224,21 @@ para novas observações de `\(X\)` e `\(Y\)`.
 
 # Exemplo: regressão logística
 
-`$$Y_i|x \sim \text{Bernoulli}(\mu)$$`
+Componente aleatório
+
+`$$Y_i|x \sim \text{Bernoulli}(\mu_i)$$`
 
 Componente sistemático
 
-`$$\eta = \alpha + \sum_{j=1}^px_{ij}\beta_j$$`
+`$$\eta_i = \alpha + \sum_{j=1}^px_{ij}\beta_j$$`
 
-Função se ligação
+Função de ligação
 
-`$$g(\mu) = \log\left(\frac{\mu}{1-\mu}\right)$$`
+`$$g(\mu_i) = \log\left(\frac{\mu_i}{1-\mu_i}\right)$$`
 
 Ligando os componentes
 
-`$$\mu = g^{-1}(\eta) = \frac{1}{1+e^{-\eta}}$$`
+`$$\mu_i = g^{-1}(\eta_i) = \frac{1}{1+e^{-\eta_i}}$$`
 
 ---
 
@@ -244,9 +248,9 @@ A log-verossimilhança é dada por
 
 `$$l(\boldsymbol \beta|\mathbf y) = \sum_{i=1}^n y_i\log(\mu_i) + (1-y_i)\log(1-\mu_i)$$`
 
-Uma forma útil de representar a verossimilhança é a partir da *função desvio*, dada por
+Uma forma útil de representar a log-verossimilhança é a partir da *função desvio*, dada por
 
-`$$D(\mathbf y|\boldsymbol \beta) = l(\mathbf y|\mathbf y) - l(\boldsymbol \beta|\mathbf y),$$`
+`$$D(\mathbf y|\boldsymbol \beta) = l(\mathbf y|\mathbf y) - l(\boldsymbol \beta|\mathbf y)$$`
 
 ---
 
@@ -267,11 +271,11 @@ D(\mathbf y|{ \boldsymbol \beta}) &amp;= \sum_{i=1}^n y_i\log(y_i) + (1-y_i)\log
 
 # Rede neural
 
-- Componente aleatória: implica da divergência KL / Deviance.
+- Componente aleatório: é equivante à divergência KL / Deviance.
 
 --
 
-- Componente sistemática: viés e matriz de pesos. 
+- Componente sistemático: viés e matriz de pesos. 
 
 Com uma unidade de ativação:
 
@@ -297,13 +301,30 @@ Com duas unidades de ativação:
 
 --
 
-- Podemos usar `\(Z^1\)` como uma nova matriz `\(X\)`, iteradamente
+- Podemos usar `\(Z^1\)` como uma nova matriz `\(X\)`, iterativamente
 
 --
 
-- A forma usual de minimizar a deviance é diferente nos dois modelos.
-    - A regressão logística utiliza Newton-Raphson (segunda derivada)
-    - A rede neural utiliza descida de gradiente (primeira derivada)
+- A forma usual de minimizar a deviance é diferente nos dois modelos:
+
+
+- A regressão logística utiliza Newton-Raphson/Fisher Scoring (segunda derivada)
+
+`$$\beta_{new} = \beta - \mathcal I_\beta^{-1}\mathcal U_\beta,$$`
+
+onde 
+
+- `\(\mathcal U_\beta\)` é o vetor escore (gradiente) e
+
+- `\(\mathcal I_\beta\)` é a matriz de Informação (esperança da Hessiana).
+
+--
+
+- A rede neural utiliza descida de gradiente (primeira derivada)
+
+`$$\beta_{new}=\beta - \alpha\,\mathcal U_\beta$$`
+
+mais: http://bit.ly/athos-menor-dl
 
 ---
 
@@ -335,9 +356,9 @@ A convolução de `\(X\)` por `\(W\)` no ponto `\((12,16)\)` é dada por
 
 `$$\begin{aligned}
 (X_{12,16} *w )_{12,16}
-&amp;= w_{1,1}p_{11,15} + w_{1,2}p_{11,16} + w_{1,3}p_{11,17} + \\
-&amp;+ w_{2,1}p_{12,15} + w_{2,2}p_{12,16} + w_{2,3}p_{12,17} + \\
-&amp;+ w_{3,1}p_{13,15} + w_{3,2}p_{13,16} + w_{3,3}p_{13,17}
+&amp;= w_{1,1}x_{11,15} + w_{1,2}x_{11,16} + w_{1,3}x_{11,17} + \\
+&amp;+ w_{2,1}x_{12,15} + w_{2,2}x_{12,16} + w_{2,3}x_{12,17} + \\
+&amp;+ w_{3,1}x_{13,15} + w_{3,2}x_{13,16} + w_{3,3}x_{13,17}
 \end{aligned}$$`
 
 --
@@ -348,7 +369,22 @@ A convolução de `\(X\)` por `\(W\)` no ponto `\((12,16)\)` é dada por
 
 # Resultados
 
-&lt;img src="results.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+&lt;table&gt;
+&lt;tr&gt; &lt;th&gt;Imagem             &lt;/th&gt; &lt;th&gt;Nome&lt;/th&gt; &lt;th&gt;N&lt;/th&gt;     &lt;th&gt;Taxa de acerto&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt; &lt;td&gt;&lt;img src='rfb.png'&gt;&lt;/td&gt; &lt;td&gt;RFB&lt;/td&gt;  &lt;td&gt;27000&lt;/td&gt; &lt;td&gt;98%&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt; &lt;td&gt;&lt;img src='trt.png'&gt;&lt;/td&gt; &lt;td&gt;TRT&lt;/td&gt;  &lt;td&gt;410&lt;/td&gt; &lt;td&gt;98%&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt; &lt;td&gt;&lt;img src='tjmg.jpeg'&gt;&lt;/td&gt; &lt;td&gt;TJMG&lt;/td&gt;  &lt;td&gt;10000&lt;/td&gt; &lt;td&gt;100%&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt; &lt;td&gt;&lt;img src='rsc.png'&gt;&lt;/td&gt; &lt;td&gt;RSC&lt;/td&gt;  &lt;td&gt;11000&lt;/td&gt; &lt;td&gt;99%&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt; &lt;td&gt;&lt;img src='cadesp.png'&gt;&lt;/td&gt; &lt;td&gt;CADESP&lt;/td&gt;  &lt;td&gt;10000&lt;/td&gt; &lt;td&gt;98%&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+
+
+---
+class: inverse, middle
+
+# Problemas e próximos passos
 
 ---
 
@@ -366,15 +402,15 @@ Possíveis soluções para problemas de eficiência e generalização:
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Feedback &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; Ensemble &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Reciclagem &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Ruído &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Enriquecimento &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ensemble &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Feedback &lt;/td&gt;
    &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
@@ -386,15 +422,15 @@ Possíveis soluções para problemas de eficiência e generalização:
 
 --
 
-- **ruídos**: mesmo princípio da reciclagem, mas tem foco na generalização. 
-
---
-
-- **ensemble**: usar parâmetros ajustados de um modelo em outro. 
+- **ruído**: mesmo princípio da reciclagem, mas tem foco na generalização. 
 
 --
 
 - **enriquecimento**: Aproveitar ferramentas (OCR) e bases de caracteres. 
+
+--
+
+- **ensemble**: usar parâmetros ajustados de um modelo em outro. 
 
 --
 
@@ -410,7 +446,12 @@ class: inverse
 - Rafael Stern
 - **Curso-R**: Athos, Caio, Daniel, Fernando, William
 
+
+&lt;a href="https://curso-r.com"&gt;
+
 &lt;img src="logo-curso-2.png" width="20%" style="display: block; margin: auto;" /&gt;
+
+&lt;/a&gt;
 
 ---
 
@@ -426,7 +467,12 @@ class: inverse
 
 - https://decryptr.netlify.com/
 
+
+&lt;a href="https://github.com/decryptr"&gt;
+
 &lt;img src="22989908.jpeg" width="20%" style="display: block; margin: auto;" /&gt;
+
+&lt;/a&gt;
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
