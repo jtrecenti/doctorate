@@ -1,0 +1,53 @@
+Reunião plano {#reuniao-plano}
+-------------
+
+### Plano 2019 doutorado
+
+Prazo: 40 semanas.
+Metas: 
+  - Artigo JSS
+  - Solução doutorado completa
+
+28/01 - Escrever sobre captchas sintéticos
+04/02 - Plano de análise usando oráculo
+11/02 - Documentação sobre a base de dados
+18/02 - Simulações de captchas sintéticos
+25/02 - Organizar códigos
+04/03 - Rascunho do paper da JSS
+11/03 - Rascunho melhorado do paper da JSS
+18/03 - Versão inicial do paper da JSS
+25/03 - Organizar códigos
+01/04 - 
+08/04 - 
+15/04 - 
+22/04 - 
+29/04 - Organizar códigos
+06/05 - 
+13/05 - 
+20/05 - 
+27/05 - Organizar códigos
+03/06 - Submissão do paper da JSS
+10/06 - 
+17/06 - 
+24/06 - Organizar códigos
+01/07 - 
+08/07 - 
+15/07 - 
+22/07 - 
+29/07 - Organizar códigos
+05/08 - 
+12/08 - 
+19/08 - 
+26/08 - Organizar códigos
+02/09 - 
+09/09 - 
+16/09 - 
+23/09 - 
+30/09 - Organizar códigos
+07/10 - 
+14/10 - 
+21/10 - 
+28/10 - Organizar códigos
+04/11 - Wrap-up doutorado
+
+
