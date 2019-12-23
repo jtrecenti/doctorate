@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 2 Introdução | Resolvendo CAPTCHAs</title>
+  <meta name="description" content="Tese de doutorado." />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 2 Introdução | Resolvendo CAPTCHAs" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Tese de doutorado." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 2 Introdução | Resolvendo CAPTCHAs" />
+  
+  <meta name="twitter:description" content="Tese de doutorado." />
+  
+
+<meta name="author" content="Julio Trecenti" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="problema.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Sobre este livro</a></li>
+<li class="chapter" data-level="2" data-path="introdução.html"><a href="introdução.html"><i class="fa fa-check"></i><b>2</b> Introdução</a><ul>
+<li class="chapter" data-level="2.1" data-path="introdução.html"><a href="introdução.html#objetivos"><i class="fa fa-check"></i><b>2.1</b> Objetivos</a></li>
+<li class="chapter" data-level="2.2" data-path="introdução.html"><a href="introdução.html#resultados-esperados"><i class="fa fa-check"></i><b>2.2</b> Resultados esperados</a></li>
+<li class="chapter" data-level="2.3" data-path="introdução.html"><a href="introdução.html#revisão-bibliográfica"><i class="fa fa-check"></i><b>2.3</b> Revisão bibliográfica</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="problema.html"><a href="problema.html"><i class="fa fa-check"></i><b>3</b> Problema</a><ul>
+<li class="chapter" data-level="3.1" data-path="problema.html"><a href="problema.html#variantes"><i class="fa fa-check"></i><b>3.1</b> Variantes</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="problema.html"><a href="problema.html#áudio"><i class="fa fa-check"></i><b>3.1.1</b> Áudio</a></li>
+<li class="chapter" data-level="3.1.2" data-path="problema.html"><a href="problema.html#covariáveis-e-número-de-respostas-variável"><i class="fa fa-check"></i><b>3.1.2</b> Covariáveis e número de respostas variável</a></li>
+<li class="chapter" data-level="3.1.3" data-path="problema.html"><a href="problema.html#recaptcha-2.0"><i class="fa fa-check"></i><b>3.1.3</b> reCaptcha 2.0</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Solução</a><ul>
+<li class="chapter" data-level="4.1" data-path="results.html"><a href="results.html#segmentação-e-classificação"><i class="fa fa-check"></i><b>4.1</b> Segmentação e classificação</a></li>
+<li class="chapter" data-level="4.2" data-path="results.html"><a href="results.html#força-bruta"><i class="fa fa-check"></i><b>4.2</b> Força-bruta</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="results.html"><a href="results.html#redes-neurais"><i class="fa fa-check"></i><b>4.2.1</b> Redes neurais</a></li>
+<li class="chapter" data-level="4.2.2" data-path="results.html"><a href="results.html#a-operação-de-convolução"><i class="fa fa-check"></i><b>4.2.2</b> A operação de convolução</a></li>
+<li class="chapter" data-level="4.2.3" data-path="results.html"><a href="results.html#redes-neurais-convolucionais"><i class="fa fa-check"></i><b>4.2.3</b> Redes neurais convolucionais</a></li>
+<li class="chapter" data-level="4.2.4" data-path="results.html"><a href="results.html#resultados"><i class="fa fa-check"></i><b>4.2.4</b> Resultados</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="eficiência-e-generalização.html"><a href="eficiência-e-generalização.html"><i class="fa fa-check"></i><b>5</b> Eficiência e generalização</a><ul>
+<li class="chapter" data-level="5.1" data-path="eficiência-e-generalização.html"><a href="eficiência-e-generalização.html#próximos-passos"><i class="fa fa-check"></i><b>5.1</b> Próximos passos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="appendix"><span><b>Apêndice</b></span></li>
+<li class="chapter" data-level="A" data-path="pacote-decryptr.html"><a href="pacote-decryptr.html"><i class="fa fa-check"></i><b>A</b> Pacote decryptr</a><ul>
+<li class="chapter" data-level="A.1" data-path="pacote-decryptr.html"><a href="pacote-decryptr.html#funções-do-decryptr"><i class="fa fa-check"></i><b>A.1</b> Funções do <code>decryptr</code></a><ul>
+<li class="chapter" data-level="A.1.1" data-path="pacote-decryptr.html"><a href="pacote-decryptr.html#fluxo-de-utilização"><i class="fa fa-check"></i><b>A.1.1</b> Fluxo de utilização</a></li>
+<li class="chapter" data-level="A.1.2" data-path="pacote-decryptr.html"><a href="pacote-decryptr.html#download"><i class="fa fa-check"></i><b>A.1.2</b> Download</a></li>
+<li class="chapter" data-level="A.1.3" data-path="pacote-decryptr.html"><a href="pacote-decryptr.html#visualização"><i class="fa fa-check"></i><b>A.1.3</b> Visualização</a></li>
+<li class="chapter" data-level="A.1.4" data-path="pacote-decryptr.html"><a href="pacote-decryptr.html#classificação"><i class="fa fa-check"></i><b>A.1.4</b> Classificação</a></li>
+<li class="chapter" data-level="A.1.5" data-path="pacote-decryptr.html"><a href="pacote-decryptr.html#carregar-modelo"><i class="fa fa-check"></i><b>A.1.5</b> Carregar modelo</a></li>
+<li class="chapter" data-level="A.1.6" data-path="pacote-decryptr.html"><a href="pacote-decryptr.html#resolver-captcha"><i class="fa fa-check"></i><b>A.1.6</b> Resolver captcha</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Resolvendo CAPTCHAs</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="introdução" class="section level1">
+<h1><span class="header-section-number">Capítulo 2</span> Introdução</h1>
+<p>CAPTCHAs (<em>Completely Automated Public Turing test to tell Computers and Humans Apart</em>) são desafios criados com soluções fáceis de obter por humanos, mas difíceis de obter por robôs. Os CAPTCHAs nasceram entre 2000 e 2002 nos laboratórios da universidade de Carnegie Mellon <span class="citation">(Ahn, Blum, and Langford <a href="#ref-von2002telling">2002</a>)</span>, como uma tecnologia utilizada para evitar ataques <em>spam</em>.</p>
+<p>Ao longo dos anos, os CAPTCHAs tornaram-se comuns em diversas páginas da internet, podendo ser encontrados a partir de desafios de visão, audição, operações matemáticas, entre outros. Essa popularidade também trouxe iniciativas para resolver CAPTCHAs automaticamente, a partir de inputs humanos, heurísticas codificadas manualmente e até sistemas mais sofisticados de inteligência artificial. A disputa entre geradores e resolvedores gera debates profundos até os dias de hoje.</p>
+<p>Apesar da origem na criptografia e motivação prática, pode-se argumentar que CAPTCHAs representam um problema geral da inteligência artificial <span class="citation">(George et al. <a href="#ref-george2017generative">2017</a>)</span>.</p>
+<p>Essencialmente, o CAPTCHA (baseado em imagens) é uma resposta natural para pergunta de pesquisa: que aspecto da visão humana não pode ser automatizado? Essa pergunta serve não só para criar novos CAPTCHAs mas também para orientar a pesquisa em visão computacional.</p>
+<p>Uma forma ad-hoc de responder à essa pergunta é criando desafios complexos. Por exemplo, elaborando tarefas de identificar textos dentro de imagens completamente distorcidas e cheias de ruído. No entanto, hoje somos perfeitamente capazes de resolver esse problema com altíssima taxa de acerto, muitas vezes mais altas que de humanos. Para isso, só precisamos de uma base de dados de treino suficientemente grande e modelos de aprendizado estatístico flexíveis, que chamamos de força-bruta. Discutiremos sobre isso no Capítulo 3.</p>
+<p>Talvez a resposta não esteja na dificuldade, mas no contexto. Ao mudar o ambiente que circunda a tarefa, mudamos a base de dados necessária para lidar com o problema. Como o levantamento de novas bases de dados de treino é custosa, essa estratégia torna a resolução por métodos de força-bruta inexequíveis. Esse racional foi a base da criação da versão dois do <strong>reCaptcha</strong> da Google, amplamente utilizada nos dias de hoje. O reCaptcha pode ser considerado o problema a ser batido nessa área.</p>
+<p>E de que forma podemos avançar na pesquisa? Nossa hipótese, que é o objeto principal dessa tese, é a de que é possível desenvolver técnicas para aumentar a eficiência e a capacidade de generalização dos modelos para resolver CAPTCHAs baseados em textos, aproveitando ao máximo o que existe de informação disponível no contexto de CAPTCHAs e visão computacional. Qualquer passo positivo nesse sentido é um novo avanço na pesquisa de resolução de CAPTCHAs e, consequentemente, em problemas mais profundos de inteligência artificial.</p>
+<p>A jornada a deste projeto de doutorado parte do problema geral dos CAPTCHAs e se encerra na apresentação e avaliação de diversas abordagens para aumentar a eficiência e a capacidade de generalização dos modelos. No caminho, faremos uma ponte entre modelos estatísticos usuais e modelos de redes neurais convolucionais, com o intuito de mostrar que essencialmente estamos apenas estendendo modelos, não abandonando a estatística clássica.</p>
+<p>Nesse primeiro produto de qualificação, definimos o problema geral dos CAPTCHAs e suas variantes. Em seguida, mostramos a solução clássica e a solução força-bruta para o problema, apresentando os resultados obtidos até o momento. Encerramos o trabalho apresentando informalmente com os conceitos de eficiência e generalização, apontando os próximos passos que a pesquisa deve seguir.</p>
+<div id="objetivos" class="section level2">
+<h2><span class="header-section-number">2.1</span> Objetivos</h2>
+<p>O objetivo geral dessa tese é buscar formas eficientes e gerais de resolver CAPTCHAs de imagens baseados em textos.</p>
+<p>Os objetivos específicos são:</p>
+<ul>
+<li>Definir o problema do CAPTCHA e duas variações</li>
+<li>Mostrar uma solução força-bruta que funciona com alta taxa de acurácia</li>
+<li>Realizar uma ponte teórica entre regressão logística e redes neurais convolucionais</li>
+<li>Desenvolver uma ferramenta para resolver CAPTCHAs que seja útil e simples de utilizar.</li>
+<li>Discutir e testar diversas abordagens para aumentar eficiência e capacidade de generalização dos modelos.</li>
+</ul>
+</div>
+<div id="resultados-esperados" class="section level2">
+<h2><span class="header-section-number">2.2</span> Resultados esperados</h2>
+<p>O projeto de doutorado já possui novos avanços relevantes nesses pontos:</p>
+<ul>
+<li>Implementação colaborativa do pacote <code>decryptr</code> na linguagem R para resolver CAPTCHAs</li>
+<li>Ponte teórica entre modelo de regressão logística e redes neurais convolucionais utilizando notação comum para estatísticos.</li>
+<li>Levantamento de lista curada de artigos sobre o tema.</li>
+<li>Resolução de diversos CAPTCHAs que nunca foram trabalhados no passado.</li>
+</ul>
+<p>Ao final do projeto, teremos mais esses novos avanços:</p>
+<ul>
+<li>Implementação das metodologias mais recentes de forma reprodutível</li>
+<li>Estudo e validação de abordagens para aumentar eficiência e generalização dos algoritmos</li>
+<li>Investigação do uso de aprendizado por reforço e aproveitamento do oráculo</li>
+</ul>
+</div>
+<div id="revisão-bibliográfica" class="section level2">
+<h2><span class="header-section-number">2.3</span> Revisão bibliográfica</h2>
+<p>A produção acadêmica sobre CAPTCHAs se agrupa em dois tópicos: geração e resolução. Os artigos de geração buscam as formas mais eficazes de criar tarefas difíceis para robôs e fáceis para humanos. Já os artigos de resolução tentam criar novos métodos para lidar com os CAPTCHAs mais comuns da internet.</p>
+<p><span class="citation">(Ahn, Blum, and Langford <a href="#ref-von2002telling">2002</a>)</span> define captchas pela primeira vez. <span class="citation">Von Ahn et al. (<a href="#ref-von2003captcha">2003</a>)</span> deduz o problema de resolver CAPTCHA a partir de uma definição matemática genérica do problema da inteligência artificial. <span class="citation">Mori and Malik (<a href="#ref-mori2003recognizing">2003</a>)</span> apresentam uma solução rudimentar para o problema a partir de cortes em imagens. O modelo final acerta somente 33% dos casos. <span class="citation">Yan and El Ahmad (<a href="#ref-yan2008low">2008</a><a href="#ref-yan2008low">a</a>)</span> criam um modelo de quebrar CAPTCHAs baseado em diversas heurísticas. <span class="citation">Yan and El Ahmad (<a href="#ref-yan2008usability">2008</a><a href="#ref-yan2008usability">b</a>)</span> apresentam os principais problemas de utilização no desenvolvimento de CAPTCHAs concluindo, principalmente, que CAPTCHAs baseados em textos podem sim ser desafios complexos. <span class="citation">Golle (<a href="#ref-golle2008machine">2008</a>)</span> utilizam máquinas de vetor de suporte pela primeira vez. <span class="citation">Motoyama et al. (<a href="#ref-motoyama2010re">2010</a>)</span> estudam o aspecto econômico dos reCaptchas, avaliando o impacto de sua utilização ampla em toda a internet. <span class="citation">Bursztein, Martin, and Mitchell (<a href="#ref-bursztein2011text">2011</a>)</span> testam diversos modelos em 15 captchas diferentes e concluem que a melhor forma de criar CAPTCHAs complicados é colando as letras. <span class="citation">Bursztein et al. (<a href="#ref-bursztein2014end">2014</a>)</span> mostram pela primeira vez um modelo um modelo de aprendizado por reforço, utilizando feedbacks humanos. <span class="citation">George et al. (<a href="#ref-george2017generative">2017</a>)</span> desenvolvem um novo modelo capaz de quebrar CAPTCHAs a partir de pouquíssimos exemplos.</p>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-von2002telling">
+<p>Ahn, Louis von, Manuel Blum, and John Langford. 2002. “Telling Humans and Computers Apart Automatically or How Lazy Cryptographers Do Ai.” <em>Computer Science Department</em>, 149.</p>
+</div>
+<div id="ref-bursztein2014end">
+<p>Bursztein, Elie, Jonathan Aigrain, Angelika Moscicki, and John C Mitchell. 2014. “The End Is Nigh: Generic Solving of Text-Based Captchas.” In <em>WOOT</em>.</p>
+</div>
+<div id="ref-bursztein2011text">
+<p>Bursztein, Elie, Matthieu Martin, and John Mitchell. 2011. “Text-Based Captcha Strengths and Weaknesses.” In <em>Proceedings of the 18th Acm Conference on Computer and Communications Security</em>, 125–38. ACM.</p>
+</div>
+<div id="ref-george2017generative">
+<p>George, Dileep, Wolfgang Lehrach, Ken Kansky, Miguel Lázaro-Gredilla, Christopher Laan, Bhaskara Marthi, Xinghua Lou, et al. 2017. “A Generative Vision Model That Trains with High Data Efficiency and Breaks Text-Based Captchas.” <em>Science</em> 358 (6368). American Association for the Advancement of Science: eaag2612.</p>
+</div>
+<div id="ref-golle2008machine">
+<p>Golle, Philippe. 2008. “Machine Learning Attacks Against the Asirra Captcha.” In <em>Proceedings of the 15th Acm Conference on Computer and Communications Security</em>, 535–42. ACM.</p>
+</div>
+<div id="ref-mori2003recognizing">
+<p>Mori, Greg, and Jitendra Malik. 2003. “Recognizing Objects in Adversarial Clutter: Breaking a Visual Captcha.” In <em>Computer Vision and Pattern Recognition, 2003. Proceedings. 2003 Ieee Computer Society Conference on</em>, 1:I–I. IEEE.</p>
+</div>
+<div id="ref-motoyama2010re">
+<p>Motoyama, Marti, Kirill Levchenko, Chris Kanich, Damon McCoy, Geoffrey M Voelker, and Stefan Savage. 2010. “Re: CAPTCHAs-Understanding Captcha-Solving Services in an Economic Context.” In <em>USENIX Security Symposium</em>, 10:3.</p>
+</div>
+<div id="ref-von2003captcha">
+<p>Von Ahn, Luis, Manuel Blum, Nicholas J Hopper, and John Langford. 2003. “CAPTCHA: Using Hard Ai Problems for Security.” In <em>International Conference on the Theory and Applications of Cryptographic Techniques</em>, 294–311. Springer.</p>
+</div>
+<div id="ref-yan2008low">
+<p>Yan, Jeff, and Ahmad Salah El Ahmad. 2008a. “A Low-Cost Attack on a Microsoft Captcha.” In <em>Proceedings of the 15th Acm Conference on Computer and Communications Security</em>, 543–54. ACM.</p>
+</div>
+<div id="ref-yan2008usability">
+<p>Yan, Jeff, and Ahmad Salah El Ahmad. 2008b. “Usability of Captchas or Usability Issues in Captcha Design.” In <em>Proceedings of the 4th Symposium on Usable Privacy and Security</em>, 44–52. ACM.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="problema.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/yihui/bookdown-crc/edit/master/01-intro.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["jtrecenti_doctorate_captcha.pdf", "jtrecenti_doctorate_captcha.epub"],
+"toc": {
+"collapse": "none"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

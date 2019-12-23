@@ -2,7 +2,7 @@
 
 Meu doutorado em captchas
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 # Plano zero da tese
 
@@ -55,15 +55,6 @@ Meu doutorado em captchas
 
 ## Burocracia
 
-- Terminar o documento até 31/12/2018
-- Escrever qualificação até 30/06/2018
-- Fazer prova de inglês até
 
 ## Tarefas do plano inicial
 
-1. [w1] Montar template em Rmd
-2. [w3] Adicionar "O problema"
-3. [w5] Abordagem tradicional
-4. [w7] Redes neurais e convolucionais
-5. [w8] Resultados
-6. [w10] Wrap-up
