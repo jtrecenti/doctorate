@@ -1,0 +1,254 @@
+---
+title: "Resolvendo Captchas"
+subtitle: ""
+author: 
+  - "Julio Trecenti"
+  - "Orientador: Victor Fossaluza"
+institute: "Instituto de Matemática e Estatística - USP"
+date: "2022"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+# O que é um Captcha?
+
+Completely Automated Public Turing test to tell Computers and Humans Apart
+
+Existem Captchas de diversos tipos: textos em imagens, áudios, desafios matemáticos e até [Captchas gamificados](https://www.ionos.com/digitalguide/online-marketing/online-sales/captcha-codes-and-images-for-spam-protection/).
+
+---
+
+# Objetivo do trabalho
+
+O objetivo principal do trabalho é desenvolver um __método inovador__ para resolução de __Captchas de textos em imagens__, utilizando o mecanismo de *feedback* (oráculo) como fonte de dados.
+
+O trabalho tem dois objetivos secundários
+
+- Montar uma base de dados de Captchas de serviços públicos e as respectivas soluções.
+- Desenvolver um pacote computacional para facilitar nos trabalhos de classificação e resolução de Captchas.
+
+---
+
+# Questões norteadoras
+
+Questões mais amplas que ensejaram o projeto
+
+1. É possível utilizar o mecanismo de *feedback* (oráculo) dos sites para resolver Captchas?
+2. Serviços públicos deveriam usar Captchas em seus sistemas?
+3. Captchas de textos em imagens deveriam existir?
+
+---
+
+# Hipótese de pesquisa
+
+A utilização do oráculo permite a construção de modelos para resolver Captchas de textos em imagens mantendo a acurácia mas reduzindo a quantidade de observações rotuladas significativamente.
+
+---
+
+# Justificativa
+
+O trabalho apresenta três inovações importantes:
+
+- A utilização do oráculo pode ser a base de novas pesquisas que envolvem rótulos censurados. Tal área ainda é pouco explorada e pode levar a diversas aplicações, especialmente dentro da área de Deep Learning.
+
+- A criação de um banco de dados e soluções públicas ao mesmo tempo aumenta a transparência dos sistemas públicos (especialmente o judiciário) e auxilia pessoas com interesse em fazer novas pesquisas na área. __Tal base de dados ainda não existia no Brasil até o momento da presente pesquisa.__
+
+- O pacote permite não só a operacionalização de soluções na área como também a resolução de novos Captchas que possam aparecer no futuro.
+
+---
+
+# Limites
+
+- A pesquisa não trata do ReCaptcha v3.0 e ferramentas similares.
+
+- A pesquisa não lida diretamente com Captchas baseados em áudio. No entanto, o problema está parcialmente coberto, já que é possível transformar áudios em imagens utilizando espectrogramas.
+
+---
+class: inverse, middle
+
+# Parte 1: Conceitos
+
+---
+
+# Uma luta de geradores e resolvedores
+
+- Criado em Carnegie Mellon no ano 2000.
+- Inicialmente pensado para prevenir SPAM.
+- Desde então, diversos artigos foram escritos e publicados, tanto para gerar novos Captchas mais complexos
+
+---
+
+# Captchas em serviços públicos
+
+- Dados públicos devem ser acessíveis, inclusive por robôs.
+- Captchas em serviços públicos às vezes são utilizados sob a argumentação de reduzir tráfego.
+- No entanto, Captchas apenas especializam e encarecem o acesso automático, criando distorções de mercado e aproveitamento por oportunistas.
+- Nesse sentido, construir soluções abertas reduzem o incentivo de gerar essas distorções e aumentam a transparência do poder público.
+- Solução ideal: banimento dos Captchas e disponibilização ampla de APIs e portais de dados abertos.
+
+---
+
+# Ideia geral da resolução de um Captcha
+
+- Não é possível fazer a classificação diretamente
+- Duas etapas: segmentação e classificação
+- Com a utilização de técnicas de Deep Learning, as etapas de segmentação e classificação ocorrem no mesmo modelo.
+
+---
+
+# Dificultando a resolução de um Captcha
+
+- Oclusão
+- Aproximação das símbolos
+- Ruído
+- Cor, brilho, contraste, saturação
+- Translação, rotação, distorção
+- Quantidade de símbolos variável
+- Atualmente: alteração no objetivo
+
+---
+
+# O oráculo
+
+O oráculo é uma ferramenta que gera rótulos censurados.
+
+- Sempre existem por construção, já que o Captcha é um teste automatizado.
+- A obtenção de um novo rótulo é __barata__, permitindo criar uma base virtualmente infinita.
+- O oráculo só informa se a predição está correta ou errada.
+- Alguns sistemas permitem realizar mais de um teste para o mesmo rótulo.
+
+---
+
+# Gerador de Captchas
+
+- Como a utilização do oráculo envolve acesso à internet, implementamos nossas soluções utilizando um gerador de Captchas offline. 
+
+- Com ele, podemos controlar diversos aspectos, como cor, brilho, rotação, translação, tamanho e ruído.
+
+- O pacote também foi utilizado para melhorar a grade de hiperparâmetros das simulações do modelo.
+
+---
+
+# Solução 1 - Verossimilhança
+
+- A solução da verossimilhança é considerar a informação exata que o oráculo produz: a probabilidade do rótulo não ser a predição buscada.
+
+- A solução depende do método utilizado para modelagem: no nosso caso, usamos uma rede neural convolucional simples.
+
+- Não é complicado estender o método da verossimilhança para outras soluções. No Apêndice do relatório, apresentamos uma solução para redes generativas adversariais.
+
+---
+
+# Solução 2 - Heurísticas
+
+- Nessa solução, utilizamos técnicas para reclassificar predições incorretas segundo o oráculo.
+
+- As observações reclassificadas são inseridas na base de dados como se estivesse correta.
+
+- O modelo é ajustado com a base aumentada. A expectativa é que, mesmo com erros na base de treino, o modelo obtenha uma acurácia maior.
+
+---
+
+# Resultado teórico
+
+De fato, a partir de um conjunto de suposições, é possível demonstrar que a estratégia de aumentar a base de dados melhora a acurácia do modelo.
+
+__Teorema__:
+
+__Demonstração__:
+
+---
+
+# Soluções combinadas
+
+- A solução da verossimilhança pode ser utilizada em conjunto com heurísticas nos casos em que o site permite o teste de mais de uma predição para a mesma imagem.
+
+- Nesse caso, na situação em que o Captcha produz $n$ predições incorretas, inserimos na função de perda a informação de que o Captcha não é nenhuma das predições sugeridas.
+
+- Se na $n$-ésima tentativa a predição estiver correta, descartamos as predições anteriores.
+
+---
+
+# Heurísticas disponíveis
+
+- Segunda opção do símbolo com menor probabilidade.
+- Segunda opção do símbolo com menor distância entre primeiros colocados.
+- Segunda opção do símbolo com maior entropia.
+- Tabela de erros mais comuns.
+
+---
+class: inverse, middle
+
+# Parte 2: Resultados
+
+---
+
+# Resultados - Simulações
+
+Quantidade de observações para o modelo convergir
+
+---
+
+# Resultados - Simulações
+
+Quantidade de observações e acurácia após utilização do oráculo, para cada método
+
+---
+
+# Resultados - Outros Captchas
+
+Quantidade de observações para o modelo convergir: apenas nos Captchas com grande volume de exemplos rotulados
+
+---
+
+# Resultados - Outros Captchas
+
+Quantidade de observações e acurácia após utilização do oráculo, para cada método
+
+---
+
+# Pacote captcha
+
+O pacote `{captcha}` foi criado com o intuito de facilitar o download, visualização, classificação manual e ajuste de modelos.
+
+![imagem utilização captcha]()
+
+O pacote não possui funções específicas para trabalhar com oráculos. No entanto, os códigos utilizados para realizar as simulações foram disponibilizados, e podem ser adaptados para novos Captchas.
+
+---
+
+# Bancos de dados
+
+Os bancos de dados utilizados para realização deste trabalho foram integralmente disponibilizadas e podem ser acessadas no site https://decryptr.xyz
+
+O site também disponibiliza tutoriais de como ajustar um modelo para um novo Captcha, e pode receber atualizações da comunidade caso algum novo captcha seja resolvido no ambiente do pacote `{captcha}`
+
+---
+class: inverse, middle
+
+# Parte 1: Finalização
+
+---
+
+# A Tese
+
+A utilização do oráculo permite a construção de modelos para resolver Captchas de textos em imagens mantendo a acurácia mas reduzindo a quantidade de observações rotuladas entre X% e Y%.
+
+---
+
+# Próximos passos
+
+- Captchas de tamanho variável no pacote captcha.
+- Mecanismo que permita submissão de novas imagens comunitariamente.
+- Modelo ajustado via SaaS público, mantido pela comunidade.
+- Contato com órgãos públicos para apresentar as falhas dos Captchas, sugerindo a criação de APIs.
+
+---
+class: middle,center
+
+# Obrigado!

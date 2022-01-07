@@ -1,0 +1,28 @@
+---
+title: "Captchas + oraculo"
+output: pdf_document
+---
+
+Setup do problema
+
+- $g$ é ajustada com $(\mathbf x, \mathbf y)$.
+
+- Crio uma base $(\mathbf x^o, \hat{\mathbf y}^o, \mathbf z^o)$, em que $\hat{\mathbf y} = g(\mathbf x)$ e $\mathbf z^o$ é um indicador de que $\hat{\mathbf y}^o$ está correto ou errado. Sei que $\mathbb P(z^o=0) = R(g) = p$.
+
+- Defino $\tilde{\mathbf y}^o$ com
+
+$$
+\tilde{y}^o_j = \left\{ \begin{array}{c}\hat y^o_j, \text{ se } z^o_j=1,\\ \\ h(\mathbf x^o_j),\text{ se } z^o_j=0\end{array}\right.
+$$
+
+- ajusto $\tilde{g}$ com a base
+
+$$
+\left(\left[\begin{array}{c}\mathbf x \\ \mathbf x^o\end{array}\right], \left[\begin{array}{c}\mathbf y \\  \tilde {\mathbf y}^o\end{array}\right]\right)
+$$
+
+- quero demonstrar, dadas certas condições (e.g. $R(g) \leq p_0$), que 
+
+$$
+R(\tilde g) < R(g)
+$$

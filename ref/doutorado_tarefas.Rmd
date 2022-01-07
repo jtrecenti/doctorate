@@ -1,0 +1,75 @@
+
+Meu objetivo é escrever tarefas simples sobre o doutorado, que sejam factiveis, e ao mesmo tempo me levem a finalizá-lo.
+
+Um problema que eu sofro no meu doutorado é que tem coisas que eu quero fazer (e.g. base de dados aberta, shiny app etc) que são interessantes para complementar meu doutorado mas não fazem parte do núcleo da tese (referencias bibliográficas, simulações, etc).
+
+Uma coisa que eu posso fazer é listar todas essas tarefas sim, e eu vou fazendo conforme vou achando legal.
+
+Vamos começar?
+
+## Estrutura do relatório
+
+- reestruturar o bookdown de uma forma que me deixa confortável de escrever
+- replanejar títulos e conteúdos (esqueleto)
+- escrever introdução
+- escrever questões norteadoras e objetivos
+- escrever conclusões
+- escrever agradecimentos
+- escrever a parte de história com referências bibliográficas
+- montar planilha com captchas em serviços públicos
+- estruturar capítulo de resultados
+- escrever o teorema da tese
+
+### Pacote {captcha}
+
+- estudar pacotes do torch
+- ler todos artigos do rstudio ai blog
+- ler o geral da documentação do pytorch
+- montar lista de issues do pacote
+- captchas de áudio (usar torchaudio)
+- montar funções de pré-processamento
+- montar versão in memory e out memory
+- montar função de leitura dos modelos ajustados
+- estudar pytorch hub
+- implementar oráculo para vários captchas
+- fazer passar no check
+- implementar testes do pacote
+- documentar o pacote
+
+### Bases de dados
+
+- decidir local que as bases de dados vão ficar
+- montar repositório com as bases de dados
+- montar função de leitura das bases de dados
+- montar novo site para disponibilizar bases
+- montar mecanismo de upload das bases pelo novo site
+- implementar mecanismo de upload das bases
+- montar base de modelos ajustados
+- parametrizar modelos ajustados em uma planilha
+
+### shinyapp
+
+- definir objetivo/layout do shinyapp
+- montar mecanismo de upload dos captchas para base
+- montar versão do shinyapp com captchas que já estão na base
+- colocar shinyapp no novo site
+
+### Modelagem
+
+- reescrever código das simulações com hiperparâmetros
+- montar simulações com mnist
+- montar simulações com captcha da rfb
+- montar simulações com captcha do TRT
+- montar planilha com resultados das simulações
+
+### Comunicação
+
+- escrever posts de torch no blog da curso-r
+  - funcionalidades básicas do pacote
+  - convoluções
+  - captcha com oráculo
+  - acgan captcha
+  - shinyapp
+
+
+

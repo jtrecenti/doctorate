@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Resolvendo Captchas</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Julio Trecenti" />
+    <meta name="author" content="Orientador: Victor Fossaluza" />
+    <meta name="date" content="2022-01-01" />
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Resolvendo Captchas
+### Julio Trecenti
+### Orientador: Victor Fossaluza
+### Instituto de Matemática e Estatística - USP
+### 2022
+
+---
+
+
+# O que é um Captcha?
+
+Completely Automated Public Turing test to tell Computers and Humans Apart
+
+Existem Captchas de diversos tipos: textos em imagens, áudios, desafios matemáticos e até [Captchas gamificados](https://www.ionos.com/digitalguide/online-marketing/online-sales/captcha-codes-and-images-for-spam-protection/).
+
+---
+
+# Objetivo do trabalho
+
+O objetivo principal do trabalho é desenvolver um __método inovador__ para resolução de __Captchas de textos em imagens__, utilizando o mecanismo de *feedback* (oráculo) como fonte de dados.
+
+O trabalho tem dois objetivos secundários
+
+- Montar uma base de dados de Captchas de serviços públicos e as respectivas soluções.
+- Desenvolver um pacote computacional para facilitar nos trabalhos de classificação e resolução de Captchas.
+
+---
+
+# Questões norteadoras
+
+Questões mais amplas que ensejaram o projeto
+
+1. É possível utilizar o mecanismo de *feedback* (oráculo) dos sites para resolver Captchas?
+2. Serviços públicos deveriam usar Captchas em seus sistemas?
+3. Captchas de textos em imagens deveriam existir?
+
+---
+
+# Hipótese de pesquisa
+
+A utilização do oráculo permite a construção de modelos para resolver Captchas de textos em imagens mantendo a acurácia mas reduzindo a quantidade de observações rotuladas significativamente.
+
+---
+
+# Justificativa
+
+O trabalho apresenta três inovações importantes:
+
+- A utilização do oráculo pode ser a base de novas pesquisas que envolvem rótulos censurados. Tal área ainda é pouco explorada e pode levar a diversas aplicações, especialmente dentro da área de Deep Learning.
+
+- A criação de um banco de dados e soluções públicas ao mesmo tempo aumenta a transparência dos sistemas públicos (especialmente o judiciário) e auxilia pessoas com interesse em fazer novas pesquisas na área. __Tal base de dados ainda não existia no Brasil até o momento da presente pesquisa.__
+
+- O pacote permite não só a operacionalização de soluções na área como também a resolução de novos Captchas que possam aparecer no futuro.
+
+---
+
+# Limites
+
+- A pesquisa não trata do ReCaptcha v3.0 e ferramentas similares.
+
+- A pesquisa não lida diretamente com Captchas baseados em áudio. No entanto, o problema está parcialmente coberto, já que é possível transformar áudios em imagens utilizando espectrogramas.
+
+---
+class: inverse, middle
+
+# Parte 1: Conceitos
+
+---
+
+# Uma luta de geradores e resolvedores
+
+- Criado em Carnegie Mellon no ano 2000.
+- Inicialmente pensado para prevenir SPAM.
+- Desde então, diversos artigos foram escritos e publicados, tanto para gerar novos Captchas mais complexos
+
+---
+
+# Captchas em serviços públicos
+
+- Dados públicos devem ser acessíveis, inclusive por robôs.
+- Captchas em serviços públicos às vezes são utilizados sob a argumentação de reduzir tráfego.
+- No entanto, Captchas apenas especializam e encarecem o acesso automático, criando distorções de mercado e aproveitamento por oportunistas.
+- Nesse sentido, construir soluções abertas reduzem o incentivo de gerar essas distorções e aumentam a transparência do poder público.
+- Solução ideal: banimento dos Captchas e disponibilização ampla de APIs e portais de dados abertos.
+
+---
+
+# Ideia geral da resolução de um Captcha
+
+- Não é possível fazer a classificação diretamente
+- Duas etapas: segmentação e classificação
+- Com a utilização de técnicas de Deep Learning, as etapas de segmentação e classificação ocorrem no mesmo modelo.
+
+---
+
+# Dificultando a resolução de um Captcha
+
+- Oclusão
+- Aproximação das símbolos
+- Ruído
+- Cor, brilho, contraste, saturação
+- Translação, rotação, distorção
+- Quantidade de símbolos variável
+- Atualmente: alteração no objetivo
+
+---
+
+# O oráculo
+
+O oráculo é uma ferramenta que gera rótulos censurados.
+
+- Sempre existem por construção, já que o Captcha é um teste automatizado.
+- A obtenção de um novo rótulo é __barata__, permitindo criar uma base virtualmente infinita.
+- O oráculo só informa se a predição está correta ou errada.
+- Alguns sistemas permitem realizar mais de um teste para o mesmo rótulo.
+
+---
+
+# Gerador de Captchas
+
+- Como a utilização do oráculo envolve acesso à internet, implementamos nossas soluções utilizando um gerador de Captchas offline. 
+
+- Com ele, podemos controlar diversos aspectos, como cor, brilho, rotação, translação, tamanho e ruído.
+
+- O pacote também foi utilizado para melhorar a grade de hiperparâmetros das simulações do modelo.
+
+---
+
+# Solução 1 - Verossimilhança
+
+- A solução da verossimilhança é considerar a informação exata que o oráculo produz: a probabilidade do rótulo não ser a predição buscada.
+
+- A solução depende do método utilizado para modelagem: no nosso caso, usamos uma rede neural convolucional simples.
+
+- Não é complicado estender o método da verossimilhança para outras soluções. No Apêndice do relatório, apresentamos uma solução para redes generativas adversariais.
+
+---
+
+# Solução 2 - Heurísticas
+
+- Nessa solução, utilizamos técnicas para reclassificar predições incorretas segundo o oráculo.
+
+- As observações reclassificadas são inseridas na base de dados como se estivesse correta.
+
+- O modelo é ajustado com a base aumentada. A expectativa é que, mesmo com erros na base de treino, o modelo obtenha uma acurácia maior.
+
+---
+
+# Resultado teórico
+
+De fato, a partir de um conjunto de suposições, é possível demonstrar que a estratégia de aumentar a base de dados melhora a acurácia do modelo.
+
+__Teorema__:
+
+__Demonstração__:
+
+---
+
+# Soluções combinadas
+
+- A solução da verossimilhança pode ser utilizada em conjunto com heurísticas nos casos em que o site permite o teste de mais de uma predição para a mesma imagem.
+
+- Nesse caso, na situação em que o Captcha produz `\(n\)` predições incorretas, inserimos na função de perda a informação de que o Captcha não é nenhuma das predições sugeridas.
+
+- Se na `\(n\)`-ésima tentativa a predição estiver correta, descartamos as predições anteriores.
+
+---
+
+# Heurísticas disponíveis
+
+- Segunda opção do símbolo com menor probabilidade.
+- Segunda opção do símbolo com menor distância entre primeiros colocados.
+- Segunda opção do símbolo com maior entropia.
+- Tabela de erros mais comuns.
+
+---
+class: inverse, middle
+
+# Parte 2: Resultados
+
+---
+
+# Resultados - Simulações
+
+Quantidade de observações para o modelo convergir
+
+---
+
+# Resultados - Simulações
+
+Quantidade de observações e acurácia após utilização do oráculo, para cada método
+
+---
+
+# Resultados - Outros Captchas
+
+Quantidade de observações para o modelo convergir: apenas nos Captchas com grande volume de exemplos rotulados
+
+---
+
+# Resultados - Outros Captchas
+
+Quantidade de observações e acurácia após utilização do oráculo, para cada método
+
+---
+
+# Pacote captcha
+
+O pacote `{captcha}` foi criado com o intuito de facilitar o download, visualização, classificação manual e ajuste de modelos.
+
+![imagem utilização captcha]()
+
+O pacote não possui funções específicas para trabalhar com oráculos. No entanto, os códigos utilizados para realizar as simulações foram disponibilizados, e podem ser adaptados para novos Captchas.
+
+---
+
+# Bancos de dados
+
+Os bancos de dados utilizados para realização deste trabalho foram integralmente disponibilizadas e podem ser acessadas no site https://decryptr.xyz
+
+O site também disponibiliza tutoriais de como ajustar um modelo para um novo Captcha, e pode receber atualizações da comunidade caso algum novo captcha seja resolvido no ambiente do pacote `{captcha}`
+
+---
+class: inverse, middle
+
+# Parte 1: Finalização
+
+---
+
+# A Tese
+
+A utilização do oráculo permite a construção de modelos para resolver Captchas de textos em imagens mantendo a acurácia mas reduzindo a quantidade de observações rotuladas entre X% e Y%.
+
+---
+
+# Próximos passos
+
+- Captchas de tamanho variável no pacote captcha.
+- Mecanismo que permita submissão de novas imagens comunitariamente.
+- Modelo ajustado via SaaS público, mantido pela comunidade.
+- Contato com órgãos públicos para apresentar as falhas dos Captchas, sugerindo a criação de APIs.
+
+---
+class: middle,center
+
+# Obrigado!
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
